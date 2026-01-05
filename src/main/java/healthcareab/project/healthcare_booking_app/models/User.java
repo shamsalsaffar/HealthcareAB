@@ -1,19 +1,19 @@
 package healthcareab.project.healthcare_booking_app.models;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Set;
 
-@Document(collection = "users")
+@Entity
+@Table(name = "users")
 public class User {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Indexed(unique = true)
+    @Column(unique = true)
     @NotEmpty(message = "Username cannot be empty")
     private String username;
 
@@ -25,6 +25,9 @@ public class User {
     )
     private String password;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Set<Role> roles;
 
     private String email;
@@ -42,7 +45,7 @@ public class User {
     }
 
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
