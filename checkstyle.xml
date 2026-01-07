@@ -12,6 +12,8 @@
     <!-- Ensure UTF-8 -->
     <property name="charset" value="UTF-8"/>
 
+
+
     <!-- File must end with a newline -->
     <module name="NewlineAtEndOfFile"/>
 

@@ -5,7 +5,7 @@ name: CI Pipeline - Lint & Test
 on:
   # Run on pull requests to dev and main
   pull_request:
-    branches: [ "dev" ]
+    branches: [ "dev"]
 
   # Run on direct pushes to dev and main
   push:
