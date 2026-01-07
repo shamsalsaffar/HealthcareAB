@@ -81,7 +81,7 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- Tests (JUnit 5 + Mockito + AssertJ  ) -->
+		<!-- Tests -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -105,28 +105,41 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<!-- Checkstyle (requires checkstyle.xml in project root) -->
+			<!-- Checkstyle -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.5.0</version>
+				<version>3.4.0</version>
+	
 				<dependencies>
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>10.12.4</version>
+						<version>12.2.0</version>
 					</dependency>
 				</dependencies>
+
 				<configuration>
-					<configLocation>checkstyle.xml</configLocation>
+					<!-- Viktig fix: alltid peka på filen från project root -->
+					<configLocation>${project.basedir}/checkstyle.xml</configLocation>
 					<consoleOutput>true</consoleOutput>
 					<failsOnError>true</failsOnError>
 					<includeTestSourceDirectory>true</includeTestSourceDirectory>
-
 				</configuration>
+
+				<!-- Kör checkstyle vid verify (valfritt men vanligt) -->
+				<executions>
+					<execution>
+						<id>checkstyle-verify</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
-			<!-- JaCoCo: report + fail build if coverage < 80% -->
+			<!-- JaCoCo -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
