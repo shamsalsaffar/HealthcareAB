@@ -54,7 +54,10 @@ jobs:
     name: Build & Unit Tests + JaCoCo
     runs-on: ubuntu-latest
 
-
+    env:
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
       # Checkout repository code
