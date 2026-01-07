@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Checkstyle configuration for the project.
+  This file defines style, formatting, and complexity rules.
+-->
+
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+
+    <!-- Treat all violations as errors (fail the build/CI) -->
+    <property name="severity" value="error"/>
+
+    <!-- Enforce UTF-8 source files -->
+    <property name="charset" value="UTF-8"/>
+
+    <!-- Disallow tab characters -->
+    <module name="FileTabCharacter"/>
+
+    <!-- Ensure every file ends with a newline -->
+    <module name="NewlineAtEndOfFile"/>
+
+    <!-- Maximum line length -->
+    <module name="LineLength">
+        <property name="max" value="160"/>
+        <!-- Ignore package/import lines from line-length checks -->
+        <property name="ignorePattern" value="^package|^import"/>
+    </module>
+
+    <!-- TreeWalker: rules that require parsing Java code -->
+    <module name="TreeWalker">
+
+        <!-- Naming conventions -->
+        <module name="ClassName"/>
+        <module name="MethodName"/>
+        <module name="ParameterName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+
+        <!-- Imports -->
+        <module name="AvoidStarImport"/>
+        <module name="UnusedImports"/>
+
+        <!-- Code structure -->
+        <module name="EmptyBlock"/>
+        <module name="NeedBraces"/>
+        <module name="OneStatementPerLine"/>
+
+        <!-- Whitespace -->
+        <module name="WhitespaceAfter"/>
+        <module name="WhitespaceAround"/>
+
+        <!-- Braces placement -->
+        <module name="LeftCurly"/>
+        <module name="RightCurly"/>
+
+        <!-- Complexity: keep methods readable -->
+        <module name="CyclomaticComplexity">
+            <property name="max" value="10"/>
+        </module>
+
+    </module>
+</module>
