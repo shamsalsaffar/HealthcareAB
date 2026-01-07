@@ -34,11 +34,12 @@
     <module name="TreeWalker">
 
         <!-- Naming conventions -->
-        <module name="ClassName"/>
-        <module name="MethodName"/>
-        <module name="ParameterName"/>
-        <module name="LocalVariableName"/>
-        <module name="MemberName"/>
+        <module name="com.puppycrawl.tools.checkstyle.checks.naming.ClassNameCheck"/>
+        <module name="com.puppycrawl.tools.checkstyle.checks.naming.MethodNameCheck"/>
+        <module name="com.puppycrawl.tools.checkstyle.checks.naming.ParameterNameCheck"/>
+        <module name="com.puppycrawl.tools.checkstyle.checks.naming.LocalVariableNameCheck"/>
+        <module name="com.puppycrawl.tools.checkstyle.checks.naming.MemberNameCheck"/>
+
 
         <!-- Imports -->
         <module name="AvoidStarImport"/>

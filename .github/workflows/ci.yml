@@ -5,11 +5,11 @@ name: CI Pipeline - Lint & Test
 on:
   # Run on pull requests to dev and main
   pull_request:
-    branches: [ "dev", "main" ]
+    branches: [ "dev" ]
 
   # Run on direct pushes to dev and main
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "dev"]
 
 # Prevent multiple pipelines running simultaneously on the same branch
 concurrency:
