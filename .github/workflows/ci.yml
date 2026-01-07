@@ -54,7 +54,10 @@ jobs:
     name: Build & Unit Tests + JaCoCo
     runs-on: ubuntu-latest
 
-
+    env:
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
       # Checkout repository code
@@ -71,7 +74,8 @@ jobs:
       # Build the project and run unit tests
       # JaCoCo automatically measures code coverage
       - name: Build & Test (Maven Wrapper)
-        run: ./mvnw -B clean verify
+        run: |
+          mvn clean verify
 
       # Upload JUnit test reports (always, even if tests fail)
       - name: Upload test reports (Surefire)
