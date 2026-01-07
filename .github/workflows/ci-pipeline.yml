@@ -27,7 +27,7 @@ jobs:
 
       # Cache Maven dependencies for faster builds
       - name: Cache Maven dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -48,14 +48,14 @@ jobs:
 
       # Upload JaCoCo coverage report for further analysis
       - name: Upload JaCoCo coverage report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
           path: target/site/jacoco
 
       # Optionally upload the Maven build artifact (JAR/WAR)
       - name: Upload build artifact (JAR)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: my-spring-boot-app
           path: target/*.jar
