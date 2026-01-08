@@ -5,6 +5,7 @@ import healthcareab.project.healthcare_booking_app.models.Role;
 import java.util.Set;
 
 public class AuthResponse {
+    private String message;
     private String jwtToken;
     private String username;
     private Set<Role> roles;
@@ -13,7 +14,9 @@ public class AuthResponse {
     private String lastName;
     private String address;
 
-    public AuthResponse(String jwtToken, String username, Set<Role> roles, String email, String firstName, String lastName, String address) {
+
+    public AuthResponse(String jwtToken, String username, Set<Role> roles, String email, String firstName, String lastName, String address, String message) {
+        this.message = message;
         this.jwtToken = jwtToken;
         this.username = username;
         this.roles = roles;
@@ -21,8 +24,17 @@ public class AuthResponse {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
+
+
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public String getJwtToken() {
         return jwtToken;
