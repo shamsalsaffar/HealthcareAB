@@ -8,6 +8,7 @@ WORKDIR /app
 # Steg 3: Kopiera Maven-pom.xml och source-kod
 COPY pom.xml .
 COPY src /app/src
+COPY checkstyle.xml /app/checkstyle.xml
 
 # Steg 4: Bygg applikationen med Maven (skapar en JAR-fil i target/)
 RUN mvn clean install -DskipTests
@@ -17,3 +18,5 @@ COPY ./target/health-care-app.jar /app/health-care-app.jar
 
 # Steg 8: Kör applikationen med Java
 CMD ["java", "-jar", "health-care-app.jar"]
+
+

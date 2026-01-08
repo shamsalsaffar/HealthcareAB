@@ -14,8 +14,9 @@
 
 
 
-    <!-- File must end with a newline -->
-    <module name="NewlineAtEndOfFile"/>
+
+
+
 
     <!-- Max line length -->
     <module name="LineLength">

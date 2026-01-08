@@ -9,17 +9,13 @@ public class RegisterResponse {
     private String username;
     private Set<Role> roles;
 
-    private String email;
-    private String firstName;
-    private String lastName;
 
-    public RegisterResponse(String message, String username, Set<Role> roles, String email, String firstName, String lastName) {
+
+    public RegisterResponse(String message, String username, Set<Role> roles) {
         this.message = message;
         this.username = username;
         this.roles = roles;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
+
     }
 
 
@@ -47,27 +43,7 @@ public class RegisterResponse {
         this.roles = roles;
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
-    public String getFirstName() {
-        return firstName;
-    }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 }
