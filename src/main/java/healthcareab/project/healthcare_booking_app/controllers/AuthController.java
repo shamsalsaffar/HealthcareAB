@@ -46,8 +46,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        System.out.println("Registration attempt: " + registerRequest.getUsername()
-                + " with password: " + registerRequest.getPassword());
+
 
         if(authService.existsByUsername(registerRequest.getUsername())) {
             return ResponseEntity
@@ -58,6 +57,10 @@ public class AuthController {
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setPassword(registerRequest.getPassword());
+
+        user.setEmail(registerRequest.getEmail());
+        user.setFirstName(registerRequest.getFirstName());
+        user.setLastName(registerRequest.getLastName());
 
         if(registerRequest.getRoles() == null || registerRequest.getRoles().isEmpty()) {
             user.setRoles(Set.of(Role.USER));
@@ -70,10 +73,8 @@ public class AuthController {
         RegisterResponse response = new RegisterResponse(
                 "User registered successfully",
                 user.getUsername(),
-                user.getRoles(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName()
+                user.getRoles()
+
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -104,13 +105,15 @@ public class AuthController {
                     .build();
 
             AuthResponse authResponse = new AuthResponse(
-                    "Login successful",
+                    jwt,
                     userDetails.getUsername(),
                     authService.findByUsername(userDetails.getUsername()).getRoles(),
                     authService.findByUsername(userDetails.getUsername()).getEmail(),
                     authService.findByUsername(userDetails.getUsername()).getFirstName(),
                     authService.findByUsername(userDetails.getUsername()).getLastName(),
-                    authService.findByUsername(userDetails.getUsername()).getAddress()
+                    authService.findByUsername(userDetails.getUsername()).getAddress(),
+                    "Login successful"
+
 
             );
 
@@ -160,7 +163,8 @@ public class AuthController {
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getAddress()
+                user.getAddress(),
+                null
         ));
     }
 
