@@ -13,11 +13,6 @@
     <property name="charset" value="UTF-8"/>
 
 
-
-
-
-
-
     <!-- Max line length -->
     <module name="LineLength">
         <property name="max" value="160"/>
@@ -32,5 +27,9 @@
         <!-- No unused imports -->
         <module name="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
 
+        <!-- Rule to remove redundant blank lines -->
+        <module name="EmptyBlock"/>
+
     </module>
+
 </module>
