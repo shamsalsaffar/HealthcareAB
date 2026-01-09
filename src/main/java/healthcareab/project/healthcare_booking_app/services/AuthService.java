@@ -30,6 +30,17 @@ public class AuthService {
             user.setRoles(Set.of(Role.USER));
         }
 
+
+
+
+
+
+
+
+
+
+
+
         userRepository.save(user);
     }
 
