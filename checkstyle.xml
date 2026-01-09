@@ -30,12 +30,14 @@
         <!-- Rule to remove redundant blank lines -->
         <module name="EmptyBlock"/>
 
+        <!-- Enforce no multiple empty lines between methods, constructors, etc. -->
+        <module name="EmptyLineSeparator">
+            <property name="allowMultipleEmptyLines" value="false"/>
+            <property name="tokens" value="METHOD_DEF, CONSTRUCTOR_DEF, CLASS_DEF, INTERFACE_DEF, PACKAGE_DEF"/>
+        </module>
+
     </module>
 
-    <!-- Enforce no multiple empty lines between methods, constructors, etc. -->
-    <module name="EmptyLineSeparator">
-        <property name="allowMultipleEmptyLines" value="false"/>
-        <property name="tokens" value="METHOD_DEF, CONSTRUCTOR_DEF, CLASS_DEF, INTERFACE_DEF, PACKAGE_DEF"/>
-    </module>
+
 
 </module>
