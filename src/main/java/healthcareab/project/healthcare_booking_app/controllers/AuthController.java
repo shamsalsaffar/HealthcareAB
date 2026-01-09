@@ -75,9 +75,12 @@ public class AuthController {
                 user.getUsername(),
                 user.getRoles()
 
+
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+       // return ResponseEntity.status(HttpStatus.CREATED).body("Run Test");
+
+             return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
