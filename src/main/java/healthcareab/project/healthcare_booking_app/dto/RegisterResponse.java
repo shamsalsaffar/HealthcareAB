@@ -9,15 +9,12 @@ public class RegisterResponse {
     private String username;
     private Set<Role> roles;
 
-
-
     public RegisterResponse(String message, String username, Set<Role> roles) {
         this.message = message;
         this.username = username;
         this.roles = roles;
 
     }
-
 
     public String getMessage() {
         return message;
@@ -42,8 +39,5 @@ public class RegisterResponse {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
-
-
 
 }

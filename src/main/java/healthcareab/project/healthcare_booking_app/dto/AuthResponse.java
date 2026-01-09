@@ -14,8 +14,8 @@ public class AuthResponse {
     private String lastName;
     private String address;
 
-
-    public AuthResponse(String jwtToken, String username, Set<Role> roles, String email, String firstName, String lastName, String address, String message) {
+    public AuthResponse(String jwtToken, String username, Set<Role> roles, String email, String firstName,
+            String lastName, String address, String message) {
         this.message = message;
         this.jwtToken = jwtToken;
         this.username = username;
@@ -24,7 +24,6 @@ public class AuthResponse {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
-
 
     }
 

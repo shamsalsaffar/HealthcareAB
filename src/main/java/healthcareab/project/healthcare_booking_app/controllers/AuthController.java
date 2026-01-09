@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
-
 import java.util.Set;
 
 @RestController
@@ -47,11 +45,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
 
-
-        if(authService.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Username already exists.");
+        if (authService.existsByUsername(registerRequest.getUsername())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists.");
         }
 
         User user = new User();
@@ -62,7 +57,7 @@ public class AuthController {
         user.setFirstName(registerRequest.getFirstName());
         user.setLastName(registerRequest.getLastName());
 
-        if(registerRequest.getRoles() == null || registerRequest.getRoles().isEmpty()) {
+        if (registerRequest.getRoles() == null || registerRequest.getRoles().isEmpty()) {
             user.setRoles(Set.of(Role.USER));
         } else {
             user.setRoles(registerRequest.getRoles());
@@ -70,105 +65,77 @@ public class AuthController {
 
         authService.registerUser(user);
 
-        RegisterResponse response = new RegisterResponse(
-                "User registered successfully",
-                user.getUsername(),
+        RegisterResponse response = new RegisterResponse("User registered successfully", user.getUsername(),
                 user.getRoles()
-
 
         );
 
-       // return ResponseEntity.status(HttpStatus.CREATED).body("Run Test");
+        // return ResponseEntity.status(HttpStatus.CREATED).body("Run Test");
 
-             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login (@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response) {
 
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            authRequest.getUsername(),
-                            authRequest.getPassword()
-                    )
-            );
+                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
             String jwt = jwtUtil.generateToken(userDetails);
-            ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt)
-                    .httpOnly(true) // prevents javascript to get cookie
-                    .secure(false) //IMPORTANT TO CHANGE IN PRODUCTION TO TRUE
-                    .path("/")  // cookies is available in all application
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt).httpOnly(true) // prevents javascript to get
+                                                                                      // cookie
+                    .secure(false) // IMPORTANT TO CHANGE IN PRODUCTION TO TRUE
+                    .path("/") // cookies is available in all application
                     .maxAge(10 * 60 * 60) // valid for 10h
                     .sameSite("Strict") // Lax & None
                     .build();
 
-            AuthResponse authResponse = new AuthResponse(
-                    jwt,
-                    userDetails.getUsername(),
+            AuthResponse authResponse = new AuthResponse(jwt, userDetails.getUsername(),
                     authService.findByUsername(userDetails.getUsername()).getRoles(),
                     authService.findByUsername(userDetails.getUsername()).getEmail(),
                     authService.findByUsername(userDetails.getUsername()).getFirstName(),
                     authService.findByUsername(userDetails.getUsername()).getLastName(),
-                    authService.findByUsername(userDetails.getUsername()).getAddress(),
-                    "Login successful"
-
+                    authService.findByUsername(userDetails.getUsername()).getAddress(), "Login successful"
 
             );
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                    .body(authResponse);
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(authResponse);
 
         } catch (AuthenticationException e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Incorrect username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
         }
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "")
-                .httpOnly(true)
-                .secure(false) // VIKTIGT! ändra i production
-                .path("/")
-                .maxAge(0)
-                .sameSite("Strict")
-                .build();
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "").httpOnly(true).secure(false) // VIKTIGT! ändra i
+                                                                                               // production
+                .path("/").maxAge(0).sameSite("Strict").build();
 
         SecurityContextHolder.clearContext();
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body("Logout successful!");
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body("Logout successful!");
     }
 
     @GetMapping("/check")
     public ResponseEntity<?> checkAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || authentication instanceof AnonymousAuthenticationToken) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated!");
         }
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = authService.findByUsername(userDetails.getUsername());
 
-        return ResponseEntity.ok(new AuthResponse(
-                "Authenticated",
-                user.getUsername(),
-                user.getRoles(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getAddress(),
-                null
-        ));
+        return ResponseEntity.ok(new AuthResponse("Authenticated", user.getUsername(), user.getRoles(), user.getEmail(),
+                user.getFirstName(), user.getLastName(), user.getAddress(), null));
     }
 
 }

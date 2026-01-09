@@ -11,7 +11,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 
-
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 
@@ -28,12 +27,9 @@ public class User {
     @NotEmpty(message = "Username cannot be empty")
     private String username;
 
-    @Pattern(
-            regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})" +
-                    ".*$",
-            message = "Password must be at least 8 characters long and contain at least " +
-                    "one uppercase letter, one number, and one special character"
-    )
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})"
+            + ".*$", message = "Password must be at least 8 characters long and contain at least "
+                    + "one uppercase letter, one number, and one special character")
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -55,7 +51,6 @@ public class User {
         this.roles = roles;
     }
 
-
     public Long getId() {
         return id;
     }
@@ -75,7 +70,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     public Set<Role> getRoles() {
         return roles;
