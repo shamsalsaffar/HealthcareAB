@@ -27,9 +27,9 @@
         <!-- No unused imports -->
         <module name="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
 
-    </module>
+        <!-- Rule to remove redundant blank lines -->
+        <module name="EmptyBlock"/>
 
-    <!-- Rule to remove redundant blank lines -->
-    <module name="EmptyBlock"/>
+    </module>
 
 </module>
