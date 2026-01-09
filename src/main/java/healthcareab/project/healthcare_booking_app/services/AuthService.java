@@ -26,20 +26,9 @@ public class AuthService {
         user.setPassword(encodedPassword);
 
         // ensure the user has at least default role USER
-        if(user.getRoles() == null || user.getRoles().isEmpty()) {
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
             user.setRoles(Set.of(Role.USER));
         }
-
-
-
-
-
-
-
-
-
-
-
 
         userRepository.save(user);
     }
