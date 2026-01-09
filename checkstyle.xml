@@ -12,11 +12,8 @@
     <!-- Ensure UTF-8 -->
     <property name="charset" value="UTF-8"/>
 
-
-
-
-
-
+    <!-- Rule to remove redundant blank lines -->
+    <module name="EmptyBlock"/>
 
     <!-- Max line length -->
     <module name="LineLength">
