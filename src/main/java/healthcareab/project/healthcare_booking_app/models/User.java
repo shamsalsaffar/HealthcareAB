@@ -1,8 +1,7 @@
 package healthcareab.project.healthcare_booking_app.models;
 
+import healthcareab.project.healthcare_booking_app.models.enums.Role;
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,8 +23,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@Inheritance(strategy = InheritanceType.JOINED)  // Använd Joined Table Inheritance
 @Table(name = "users")
 public class User {
     @Id
