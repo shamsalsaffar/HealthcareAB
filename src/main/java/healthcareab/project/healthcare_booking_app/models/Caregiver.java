@@ -2,7 +2,12 @@ package healthcareab.project.healthcare_booking_app.models;
 
 import healthcareab.project.healthcare_booking_app.models.enums.Role;
 import healthcareab.project.healthcare_booking_app.models.enums.Specialisation;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Set;
