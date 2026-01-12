@@ -14,8 +14,7 @@ public class RegisterRequest {
     private String firstName;
     private String lastName;
 
-    public RegisterRequest(String username, String password, Set<Role> roles, String firstName,
-            String lastName) {
+    public RegisterRequest(String username, String password, Set<Role> roles, String firstName, String lastName) {
         this.username = username;
         this.password = password;
         this.roles = roles;
@@ -34,7 +33,6 @@ public class RegisterRequest {
     public Set<Role> getRoles() {
         return roles;
     }
-
 
     public String getFirstName() {
         return firstName;

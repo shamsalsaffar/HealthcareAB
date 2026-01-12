@@ -95,15 +95,11 @@ public class AuthController {
                     .sameSite("Strict") // Lax & None
                     .build();
 
-            AuthResponse authResponse = new AuthResponse(
-                    jwt,
-                    userDetails.getUsername(),
+            AuthResponse authResponse = new AuthResponse(jwt, userDetails.getUsername(),
                     authService.findByUsername(userDetails.getUsername()).getRoles(),
                     authService.findByUsername(userDetails.getUsername()).getUsername(),
                     authService.findByUsername(userDetails.getUsername()).getFirstName(),
-                    authService.findByUsername(userDetails.getUsername()).getLastName(),
-                    "Login successful"
-            );
+                    authService.findByUsername(userDetails.getUsername()).getLastName(), "Login successful");
 
             return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(authResponse);
 
@@ -135,8 +131,8 @@ public class AuthController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = authService.findByUsername(userDetails.getUsername());
 
-        return ResponseEntity.ok(new AuthResponse("Authenticated", user.getUsername(), user.getRoles(), user.getUsername(),
-                user.getFirstName(), user.getLastName(), null));
+        return ResponseEntity.ok(new AuthResponse("Authenticated", user.getUsername(), user.getRoles(),
+                user.getUsername(), user.getFirstName(), user.getLastName(), null));
     }
 
 }
