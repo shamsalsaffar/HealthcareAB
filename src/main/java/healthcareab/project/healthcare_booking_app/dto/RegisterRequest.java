@@ -11,17 +11,14 @@ public class RegisterRequest {
     @NotBlank
     private String password;
     private Set<Role> roles;
-
-    private String email;
     private String firstName;
     private String lastName;
 
-    public RegisterRequest(String username, String password, Set<Role> roles, String email, String firstName,
+    public RegisterRequest(String username, String password, Set<Role> roles, String firstName,
             String lastName) {
         this.username = username;
         this.password = password;
         this.roles = roles;
-        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -38,9 +35,6 @@ public class RegisterRequest {
         return roles;
     }
 
-    public String getEmail() {
-        return email;
-    }
 
     public String getFirstName() {
         return firstName;
