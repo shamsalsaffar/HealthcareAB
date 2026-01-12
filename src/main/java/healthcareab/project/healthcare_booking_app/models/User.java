@@ -86,21 +86,25 @@ public class User {
         this.password = password;
     }
 
-    public @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, spaces, hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String getFirstName() {
+    public @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, spaces, " +
+            "hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String getFirstName() {
         return firstName;
     }
 
     public void setFirstName(
-            @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, spaces, hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String firstName) {
+            @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, spaces, " +
+                    "hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String firstName) {
         this.firstName = firstName;
     }
 
-    public @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, spaces, hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String getLastName() {
+    public @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, " +
+            "spaces, hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String getLastName() {
         return lastName;
     }
 
     public void setLastName(
-            @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, spaces, hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String lastName) {
+            @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, " +
+                    "spaces, hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String lastName) {
         this.lastName = lastName;
     }
 
