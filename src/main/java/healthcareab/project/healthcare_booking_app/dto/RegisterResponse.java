@@ -2,17 +2,15 @@ package healthcareab.project.healthcare_booking_app.dto;
 
 import healthcareab.project.healthcare_booking_app.models.enums.Role;
 
-import java.util.Set;
-
 public class RegisterResponse {
     private String message;
     private String username;
-    private Set<Role> roles;
+    private Role role;
 
-    public RegisterResponse(String message, String username, Set<Role> roles) {
+    public RegisterResponse(String message, String username, Role role) {
         this.message = message;
         this.username = username;
-        this.roles = roles;
+        this.role = role;
 
     }
 
@@ -32,12 +30,11 @@ public class RegisterResponse {
         this.username = username;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
-
 }
