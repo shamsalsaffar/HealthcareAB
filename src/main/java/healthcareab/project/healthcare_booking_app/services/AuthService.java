@@ -1,7 +1,6 @@
 package healthcareab.project.healthcare_booking_app.services;
 
 import healthcareab.project.healthcare_booking_app.models.User;
-import healthcareab.project.healthcare_booking_app.models.enums.Role;
 import healthcareab.project.healthcare_booking_app.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,11 +21,6 @@ public class AuthService {
         // hash password
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-
-        // ensure the user has at least default role USER
-        if (user.getRole() == null || user.getRole() == null) {
-            user.setRole(Role.USER);
-        }
 
         userRepository.save(user);
     }
