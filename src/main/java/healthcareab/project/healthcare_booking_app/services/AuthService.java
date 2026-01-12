@@ -1,6 +1,6 @@
 package healthcareab.project.healthcare_booking_app.services;
 
-import healthcareab.project.healthcare_booking_app.models.Role;
+import healthcareab.project.healthcare_booking_app.models.enums.Role;
 import healthcareab.project.healthcare_booking_app.models.User;
 import healthcareab.project.healthcare_booking_app.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +26,7 @@ public class AuthService {
         user.setPassword(encodedPassword);
 
         // ensure the user has at least default role USER
-        if(user.getRoles() == null || user.getRoles().isEmpty()) {
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
             user.setRoles(Set.of(Role.USER));
         }
 
@@ -43,8 +43,4 @@ public class AuthService {
     public boolean existsByUsername(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
-
-
-
-
 }

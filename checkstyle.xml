@@ -12,18 +12,6 @@
     <!-- Ensure UTF-8 -->
     <property name="charset" value="UTF-8"/>
 
-
-
-
-
-
-
-    <!-- Max line length -->
-    <module name="LineLength">
-        <property name="max" value="160"/>
-        <property name="ignorePattern" value="^package|^import"/>
-    </module>
-
     <module name="TreeWalker">
 
         <!-- No star imports (import ...*) -->
@@ -32,5 +20,17 @@
         <!-- No unused imports -->
         <module name="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
 
+        <!-- Rule to remove redundant blank lines -->
+        <module name="EmptyBlock"/>
+
+        <!-- Enforce no multiple empty lines between methods, constructors, etc. -->
+        <module name="EmptyLineSeparator">
+            <property name="allowMultipleEmptyLines" value="false"/>
+            <property name="tokens" value="METHOD_DEF, CLASS_DEF, INTERFACE_DEF, PACKAGE_DEF"/>
+        </module>
+
     </module>
+
+
+
 </module>

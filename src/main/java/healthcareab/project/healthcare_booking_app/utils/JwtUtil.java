@@ -19,10 +19,8 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-
     @Value("${jwt.expirationMs}")
     private int jwtExpirationMs;
-
 
     private Key getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
@@ -30,12 +28,9 @@ public class JwtUtil {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date())
+        return Jwts.builder().setSubject(userDetails.getUsername()).setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
@@ -48,23 +43,17 @@ public class JwtUtil {
         }
     }
 
-
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
-
 
     private boolean isTokenExpired(String token) {
         Date expiration = extractAllClaims(token).getExpiration();
         return expiration.before(new Date());
     }
 
-
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .build()
-                .parseClaimsJwt(token)
-                .getBody();
+        return Jwts.parserBuilder().build().parseClaimsJwt(token).getBody();
     }
 
 }
