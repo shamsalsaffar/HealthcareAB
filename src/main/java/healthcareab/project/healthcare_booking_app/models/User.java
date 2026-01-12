@@ -1,6 +1,19 @@
 package healthcareab.project.healthcare_booking_app.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -103,8 +116,7 @@ public class User {
     }
 
     public void setLastName(
-            @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, " +
-                    "spaces, hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String lastName) {
+            @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, spaces, hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String lastName) {
         this.lastName = lastName;
     }
 
