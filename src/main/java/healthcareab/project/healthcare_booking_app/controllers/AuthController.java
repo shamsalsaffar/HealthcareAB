@@ -53,7 +53,7 @@ public class AuthController {
         user.setUsername(registerRequest.getUsername());
         user.setPassword(registerRequest.getPassword());
 
-        user.setEmail(registerRequest.getEmail());
+        user.setUsername(registerRequest.getUsername());
         user.setFirstName(registerRequest.getFirstName());
         user.setLastName(registerRequest.getLastName());
 
@@ -97,12 +97,9 @@ public class AuthController {
 
             AuthResponse authResponse = new AuthResponse(jwt, userDetails.getUsername(),
                     authService.findByUsername(userDetails.getUsername()).getRoles(),
-                    authService.findByUsername(userDetails.getUsername()).getEmail(),
+                    authService.findByUsername(userDetails.getUsername()).getUsername(),
                     authService.findByUsername(userDetails.getUsername()).getFirstName(),
-                    authService.findByUsername(userDetails.getUsername()).getLastName(),
-                    authService.findByUsername(userDetails.getUsername()).getAddress(), "Login successful"
-
-            );
+                    authService.findByUsername(userDetails.getUsername()).getLastName(), "Login successful");
 
             return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(authResponse);
 
@@ -134,8 +131,8 @@ public class AuthController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = authService.findByUsername(userDetails.getUsername());
 
-        return ResponseEntity.ok(new AuthResponse("Authenticated", user.getUsername(), user.getRoles(), user.getEmail(),
-                user.getFirstName(), user.getLastName(), user.getAddress(), null));
+        return ResponseEntity.ok(new AuthResponse("Authenticated", user.getUsername(), user.getRoles(),
+                user.getUsername(), user.getFirstName(), user.getLastName(), null));
     }
 
 }
