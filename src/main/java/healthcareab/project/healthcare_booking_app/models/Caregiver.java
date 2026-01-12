@@ -10,8 +10,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.Set;
-
 @Entity
 @Table(name = "caregivers")
 public class Caregiver extends User {
@@ -31,8 +29,8 @@ public class Caregiver extends User {
         this.clinic = clinic;
     }
 
-    public Caregiver(String username, String password, Set<Role> roles, Specialisation specialisation, Clinic clinic) {
-        super(username, password, roles);  // Call the parent class constructor to initialize User fields
+    public Caregiver(String username, String password, Role role, Specialisation specialisation, Clinic clinic) {
+        super(username, password, role);  // Call the parent class constructor to initialize User fields
         this.specialisation = specialisation;
         this.clinic = clinic;
     }
