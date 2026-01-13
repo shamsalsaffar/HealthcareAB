@@ -21,6 +21,7 @@ public class AvailabilityController {
     }
 
     //TODO need to fix the auth. just wanna check if it works first
+//    @PreAuthorize("hasRole('CAREGIVER')")
     @PostMapping
     public ResponseEntity<AvailabilityResponse> createAvailability(
             @Valid @RequestBody AvailabilityRequest availabilityRequest) {
