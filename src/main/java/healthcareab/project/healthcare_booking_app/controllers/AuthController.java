@@ -92,7 +92,7 @@ public class AuthController {
                     .secure(false) // IMPORTANT TO CHANGE IN PRODUCTION TO TRUE
                     .path("/") // cookies is available in all application
                     .maxAge(10 * 60 * 60) // valid for 10h
-                    .sameSite("Strict") // Lax & None
+                    .sameSite("Lax") // Lax & None
                     .build();
 
             AuthResponse authResponse = new AuthResponse(jwt, userDetails.getUsername(),
