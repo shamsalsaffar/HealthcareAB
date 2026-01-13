@@ -52,9 +52,10 @@ public class SecurityConfig {
 
                 // define URL based rules
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/auth/login", "/auth/register").permitAll()
+                       .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                       .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/auth/check").authenticated()
+                       // .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated())
 
                 // disable session due to jwt statelessness
