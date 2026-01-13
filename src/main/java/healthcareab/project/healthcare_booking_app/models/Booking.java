@@ -1,5 +1,6 @@
 package healthcareab.project.healthcare_booking_app.models;
 
+import healthcareab.project.healthcare_booking_app.models.enums.BookingStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -12,16 +13,15 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-
-    @ManyToOne
-    @JoinColumn(name = "patient_id")
-    private User patient;
+    private long id;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private User caregiver;
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
+
+    @ManyToOne
+    @JoinColumn(name = "caregiver_id", nullable = false)
+    private Caregiver caregiver;
 
     @Column(nullable = false)
     private LocalDateTime booking_start_time;
@@ -29,8 +29,9 @@ public class Booking {
     @Column(nullable = false)
     private LocalDateTime booking_end_time;
 
-    @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "status")
+    private BookingStatus status;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -38,7 +39,7 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(User patient, User caregiver, LocalDateTime booking_start_time, LocalDateTime booking_end_time, String status) {
+    public Booking(Patient patient, Caregiver caregiver, LocalDateTime booking_start_time, LocalDateTime booking_end_time, BookingStatus status) {
         this.patient = patient;
         this.caregiver = caregiver;
         this.booking_start_time = booking_start_time;
@@ -46,15 +47,15 @@ public class Booking {
         this.status = status;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public User getPatient() {
+    public Patient getPatient() {
         return patient;
     }
 
-    public User getCaregiver() {
+    public Caregiver getCaregiver() {
         return caregiver;
     }
 
@@ -66,8 +67,12 @@ public class Booking {
         return booking_end_time;
     }
 
-    public String getStatus() {
+    public BookingStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(BookingStatus status) {
+        this.status = status;
     }
 
     public LocalDateTime getCreatedAt() {
