@@ -3,6 +3,9 @@ package healthcareab.project.healthcare_booking_app.repository;
 import healthcareab.project.healthcare_booking_app.models.Availability;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AvailabilityRepository extends JpaRepository<Availability, Long> {
+import java.util.List;
 
+public interface AvailabilityRepository extends JpaRepository<Availability, Long> {
+    //public AvailabilityResponse getAvailabilityByCaregiverId(Long caregiverId)
+    List<Availability> findByCaregiver_Id(Long caregiverId);
 }
