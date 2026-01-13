@@ -1,23 +1,21 @@
 package healthcareab.project.healthcare_booking_app.dto;
 
-import healthcareab.project.healthcare_booking_app.models.Role;
+import healthcareab.project.healthcare_booking_app.models.enums.Role;
 import jakarta.validation.constraints.NotBlank;
-
-import java.util.Set;
 
 public class RegisterRequest {
     @NotBlank
     private String username;
     @NotBlank
     private String password;
-    private Set<Role> roles;
+    private Role role;
     private String firstName;
     private String lastName;
 
-    public RegisterRequest(String username, String password, Set<Role> roles, String firstName, String lastName) {
+    public RegisterRequest(String username, String password, Role role, String firstName, String lastName) {
         this.username = username;
         this.password = password;
-        this.roles = roles;
+        this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -30,8 +28,8 @@ public class RegisterRequest {
         return password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
     public String getFirstName() {

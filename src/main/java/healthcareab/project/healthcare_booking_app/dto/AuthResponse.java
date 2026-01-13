@@ -1,24 +1,22 @@
 package healthcareab.project.healthcare_booking_app.dto;
 
-import healthcareab.project.healthcare_booking_app.models.Role;
-
-import java.util.Set;
+import healthcareab.project.healthcare_booking_app.models.enums.Role;
 
 public class AuthResponse {
     private String message;
     private String jwtToken;
     private String username;
-    private Set<Role> roles;
+    private Role role;
     private String email;
     private String firstName;
     private String lastName;
 
-    public AuthResponse(String jwtToken, String username, Set<Role> roles, String email, String firstName,
+    public AuthResponse(String jwtToken, String username, Role role, String email, String firstName,
             String lastName, String message) {
         this.message = message;
         this.jwtToken = jwtToken;
         this.username = username;
-        this.roles = roles;
+        this.role = role;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,12 +47,12 @@ public class AuthResponse {
         this.username = username;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getEmail() {

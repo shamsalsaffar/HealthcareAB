@@ -4,8 +4,8 @@ import healthcareab.project.healthcare_booking_app.dto.AuthRequest;
 import healthcareab.project.healthcare_booking_app.dto.AuthResponse;
 import healthcareab.project.healthcare_booking_app.dto.RegisterRequest;
 import healthcareab.project.healthcare_booking_app.dto.RegisterResponse;
-import healthcareab.project.healthcare_booking_app.models.Role;
 import healthcareab.project.healthcare_booking_app.models.User;
+import healthcareab.project.healthcare_booking_app.models.enums.Role;
 import healthcareab.project.healthcare_booking_app.services.AuthService;
 import healthcareab.project.healthcare_booking_app.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,13 +21,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
@@ -52,22 +50,22 @@ public class AuthController {
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setPassword(registerRequest.getPassword());
-
         user.setUsername(registerRequest.getUsername());
         user.setFirstName(registerRequest.getFirstName());
         user.setLastName(registerRequest.getLastName());
 
-        if (registerRequest.getRoles() == null || registerRequest.getRoles().isEmpty()) {
-            user.setRoles(Set.of(Role.USER));
+//security breach!
+        /*if (registerRequest.getRole() == null) {
+            user.setRole(Role.USER);
         } else {
-            user.setRoles(registerRequest.getRoles());
-        }
+            user.setRole(registerRequest.getRole());
+        }*/
+
+        user.setRole(Role.USER);
 
         authService.registerUser(user);
 
-        RegisterResponse response = new RegisterResponse("User registered successfully", user.getUsername(),
-                user.getRoles()
-
+        RegisterResponse response = new RegisterResponse("User registered successfully", user.getUsername(), user.getRole()
         );
 
         // return ResponseEntity.status(HttpStatus.CREATED).body("Run Test");
@@ -96,7 +94,7 @@ public class AuthController {
                     .build();
 
             AuthResponse authResponse = new AuthResponse(jwt, userDetails.getUsername(),
-                    authService.findByUsername(userDetails.getUsername()).getRoles(),
+                    authService.findByUsername(userDetails.getUsername()).getRole(),
                     authService.findByUsername(userDetails.getUsername()).getUsername(),
                     authService.findByUsername(userDetails.getUsername()).getFirstName(),
                     authService.findByUsername(userDetails.getUsername()).getLastName(), "Login successful");
@@ -131,7 +129,7 @@ public class AuthController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = authService.findByUsername(userDetails.getUsername());
 
-        return ResponseEntity.ok(new AuthResponse("Authenticated", user.getUsername(), user.getRoles(),
+        return ResponseEntity.ok(new AuthResponse("Authenticated", user.getUsername(), user.getRole(),
                 user.getUsername(), user.getFirstName(), user.getLastName(), null));
     }
 
