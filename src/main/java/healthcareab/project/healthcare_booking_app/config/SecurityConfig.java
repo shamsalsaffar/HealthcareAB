@@ -69,7 +69,6 @@ public class SecurityConfig {
                             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                             response.setContentType("application/json");
                             response.getWriter().write("{\"status\":403,\"message\":\"Forbidden\"}");
-
                         }))
                 // add jwt filter before standard filter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
