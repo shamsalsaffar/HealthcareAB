@@ -1,11 +1,6 @@
 package healthcareab.project.healthcare_booking_app.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -20,8 +15,9 @@ public class Availability {
     private Long id;
 
     @NotNull(message = "Caregiver id is required")
-    @Column(name = "caregiver_id", nullable = false)
-    private Long caregiverId;
+    @ManyToOne
+    @JoinColumn(name = "caregiver_id", nullable = false)
+    private Caregiver caregiverId;
 
     @NotNull(message = "Start time is required")
     @Column(name = "start_time", nullable = false)
@@ -41,7 +37,7 @@ public class Availability {
     }
 
     public Availability(
-            Long caregiverId,
+            Caregiver caregiverId,
             LocalDate startTime,
             LocalDate endTime,
             boolean reoccurring
@@ -57,11 +53,11 @@ public class Availability {
         return id;
     }
 
-    public Long getCaregiverId() {
+    public Caregiver getCaregiverId() {
         return caregiverId;
     }
 
-    public void setCaregiverId(Long caregiverId) {
+    public void setCaregiverId(Caregiver caregiverId) {
         this.caregiverId = caregiverId;
     }
 
