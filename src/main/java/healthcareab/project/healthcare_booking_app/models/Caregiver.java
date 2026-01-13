@@ -14,7 +14,6 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "caregivers")
 public class Caregiver extends User {
 
-
     @Enumerated(EnumType.STRING)
     private Specialisation specialisation;
 
@@ -23,14 +22,13 @@ public class Caregiver extends User {
     @NotNull(message = "A caregiver has to belong to a clinic.")
     private Clinic clinic;
 
-
     public Caregiver(Specialisation specialisation, Clinic clinic) {
         this.specialisation = specialisation;
         this.clinic = clinic;
     }
 
     public Caregiver(String username, String password, Role role, Specialisation specialisation, Clinic clinic) {
-        super(username, password, role);  // Call the parent class constructor to initialize User fields
+        super(username, password, role); // Call the parent class constructor to initialize User fields
         this.specialisation = specialisation;
         this.clinic = clinic;
     }
