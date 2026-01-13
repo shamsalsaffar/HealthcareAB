@@ -32,10 +32,10 @@ public class Booking {
     private Caregiver caregiver;
 
     @Column(nullable = false)
-    private LocalDateTime booking_start_time;
+    private LocalDateTime bookingStartTime;
 
     @Column(nullable = false)
-    private LocalDateTime booking_end_time;
+    private LocalDateTime bookingEndTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "status")
@@ -47,12 +47,12 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(Patient patient, Caregiver caregiver, LocalDateTime booking_start_time,
-            LocalDateTime booking_end_time, BookingStatus status) {
+    public Booking(Patient patient, Caregiver caregiver, LocalDateTime bookingStartTime,
+            LocalDateTime bookingEndTime, BookingStatus status) {
         this.patient = patient;
         this.caregiver = caregiver;
-        this.booking_start_time = booking_start_time;
-        this.booking_end_time = booking_end_time;
+        this.bookingStartTime = bookingStartTime;
+        this.bookingEndTime = bookingEndTime;
         this.status = status;
     }
 
@@ -68,12 +68,12 @@ public class Booking {
         return caregiver;
     }
 
-    public LocalDateTime getBooking_start_time() {
-        return booking_start_time;
+    public LocalDateTime getBookingStartTime() {
+        return bookingStartTime;
     }
 
-    public LocalDateTime getBooking_end_time() {
-        return booking_end_time;
+    public LocalDateTime getBookingEndTime() {
+        return bookingEndTime;
     }
 
     public BookingStatus getStatus() {
