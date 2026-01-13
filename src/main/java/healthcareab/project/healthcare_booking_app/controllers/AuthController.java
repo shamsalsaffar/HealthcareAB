@@ -54,19 +54,18 @@ public class AuthController {
         user.setFirstName(registerRequest.getFirstName());
         user.setLastName(registerRequest.getLastName());
 
-//security breach!
-        /*if (registerRequest.getRole() == null) {
-            user.setRole(Role.USER);
-        } else {
-            user.setRole(registerRequest.getRole());
-        }*/
+        // security breach!
+        /*
+         * if (registerRequest.getRole() == null) { user.setRole(Role.USER); } else {
+         * user.setRole(registerRequest.getRole()); }
+         */
 
         user.setRole(Role.USER);
 
         authService.registerUser(user);
 
-        RegisterResponse response = new RegisterResponse("User registered successfully", user.getUsername(), user.getRole()
-        );
+        RegisterResponse response = new RegisterResponse("User registered successfully", user.getUsername(),
+                user.getRole());
 
         // return ResponseEntity.status(HttpStatus.CREATED).body("Run Test");
 

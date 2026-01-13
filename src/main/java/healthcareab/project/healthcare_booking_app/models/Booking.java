@@ -39,7 +39,8 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(Patient patient, Caregiver caregiver, LocalDateTime booking_start_time, LocalDateTime booking_end_time, BookingStatus status) {
+    public Booking(Patient patient, Caregiver caregiver, LocalDateTime booking_start_time,
+            LocalDateTime booking_end_time, BookingStatus status) {
         this.patient = patient;
         this.caregiver = caregiver;
         this.booking_start_time = booking_start_time;

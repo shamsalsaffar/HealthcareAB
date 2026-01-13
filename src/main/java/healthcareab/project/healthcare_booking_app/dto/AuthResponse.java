@@ -11,8 +11,8 @@ public class AuthResponse {
     private String firstName;
     private String lastName;
 
-    public AuthResponse(String jwtToken, String username, Role role, String email, String firstName,
-            String lastName, String message) {
+    public AuthResponse(String jwtToken, String username, Role role, String email, String firstName, String lastName,
+            String message) {
         this.message = message;
         this.jwtToken = jwtToken;
         this.username = username;
