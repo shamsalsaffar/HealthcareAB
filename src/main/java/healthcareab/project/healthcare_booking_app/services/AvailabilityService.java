@@ -22,6 +22,7 @@ public class AvailabilityService {
         this.userRepository = userRepository;
     }
 
+    //TODO need to check auth before update. just wanna check if it works first
     public AvailabilityResponse createAvailability(AvailabilityRequest dto) {
 
         Caregiver caregiver = userRepository.findById(dto.getCaregiverId())
@@ -31,7 +32,7 @@ public class AvailabilityService {
 
         Availability availability = new Availability();
         availability.setCaregiver(caregiver);
-        availability.setReoccurring(dto.isReoccurring());
+        availability.setReoccurring(dto.getReoccurring());
         availability.setStartTime(dto.getStartTime());
         availability.setEndTime(dto.getEndTime());
         availability.setCreatedAt(LocalDate.now());
@@ -53,6 +54,33 @@ public class AvailabilityService {
                 .map(this::mapToResponse)
                 .toList();
     }
+
+    public AvailabilityResponse updateAvailability(AvailabilityRequest dto, Long id) {
+        Availability availability = availabilityRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("No availability found"));
+
+        if (dto.getStartTime() != null){
+            availability.setStartTime(dto.getStartTime());
+        }
+        if (dto.getEndTime() != null){
+            availability.setEndTime(dto.getEndTime());
+        }
+        if (dto.getReoccurring() != null){
+            availability.setReoccurring(dto.getReoccurring());
+        }
+
+        availabilityRepository.save(availability);
+
+        return mapToResponse(availability);
+    }
+
+    public void deleteAvailability(Long id) {
+        if (!availabilityRepository.existsById(id)) {
+            throw new RuntimeException("Availability not found");
+        }
+        availabilityRepository.deleteById(id);
+    }
+
 
     private AvailabilityResponse mapToResponse(Availability availability) {
         return new AvailabilityResponse(

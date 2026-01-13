@@ -11,7 +11,7 @@ public class AvailabilityRequest {
     @NotNull
     private LocalDate endTime;
 
-    private boolean reoccurring;
+    private Boolean reoccurring;
 
     @NotNull
     private Long caregiverId;
@@ -32,11 +32,11 @@ public class AvailabilityRequest {
         this.endTime = endTime;
     }
 
-    public boolean isReoccurring() {
+    public Boolean getReoccurring() {
         return reoccurring;
     }
 
-    public void setReoccurring(boolean reoccurring) {
+    public void setReoccurring(Boolean reoccurring) {
         this.reoccurring = reoccurring;
     }
 

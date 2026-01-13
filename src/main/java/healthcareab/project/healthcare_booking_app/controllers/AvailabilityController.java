@@ -20,15 +20,18 @@ public class AvailabilityController {
         this.availabilityService = availabilityService;
     }
 
+    //TODO need to fix the auth. just wanna check if it works first
     @PostMapping
-    public ResponseEntity<AvailabilityResponse> createAvailability(@Valid @RequestBody AvailabilityRequest availabilityRequest) {
-        AvailabilityResponse availabilityResponse = availabilityService.createAvailability(availabilityRequest);
+    public ResponseEntity<AvailabilityResponse> createAvailability(
+            @Valid @RequestBody AvailabilityRequest availabilityRequest) {
+        AvailabilityResponse availabilityResponse = availabilityService
+                .createAvailability(availabilityRequest);
 //        return ResponseEntity.ok(availabilityResponse);
         return new ResponseEntity<>(availabilityResponse, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<AvailabilityResponse>> getALlAvailabilities() {
+    public ResponseEntity<List<AvailabilityResponse>> getAllAvailabilities() {
         List<AvailabilityResponse> availabilityResponse = availabilityService.getAllAvailabilities();
         return new ResponseEntity<>(availabilityResponse, HttpStatus.OK);
     }
@@ -37,6 +40,18 @@ public class AvailabilityController {
     public ResponseEntity<AvailabilityResponse> getAvailabilityById(@PathVariable Long id) {
         AvailabilityResponse availabilityResponse = availabilityService.getAvailabilityById(id);
         return ResponseEntity.ok(availabilityResponse);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<AvailabilityResponse> updateAvailability(
+            @PathVariable Long id, @Valid @RequestBody AvailabilityRequest availabilityRequest) {
+        return ResponseEntity.ok(availabilityService.updateAvailability(availabilityRequest, id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<AvailabilityResponse> deleteAvailability(@PathVariable Long id) {
+        availabilityService.deleteAvailability(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
