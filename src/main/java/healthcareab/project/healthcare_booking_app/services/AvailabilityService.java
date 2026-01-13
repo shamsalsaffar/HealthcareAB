@@ -22,6 +22,38 @@ public class AvailabilityService {
         this.userRepository = userRepository;
     }
 
+    public AvailabilityResponse createAvailability(AvailabilityRequest dto) {
+
+        Caregiver caregiver = userRepository.findById(dto.getCaregiverId())
+                .filter(Caregiver.class::isInstance)
+                .map(Caregiver.class::cast)
+                .orElseThrow(() -> new RuntimeException("Caregiver not found"));
+
+        Availability availability = new Availability();
+        availability.setCaregiver(caregiver);
+        availability.setReoccurring(dto.isReoccurring());
+        availability.setStartTime(dto.getStartTime());
+        availability.setEndTime(dto.getEndTime());
+        availability.setCreatedAt(LocalDate.now());
+
+        availabilityRepository.save(availability);
+
+        return mapToResponse(availability);
+    }
+
+    public AvailabilityResponse getAvailabilityById(Long id) {
+        Availability availability = availabilityRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("No availability found"));
+        return mapToResponse(availability);
+    }
+
+    public List<AvailabilityResponse> getAllAvailabilities() {
+        return availabilityRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     private AvailabilityResponse mapToResponse(Availability availability) {
         return new AvailabilityResponse(
                 availability.getId(),
@@ -33,34 +65,4 @@ public class AvailabilityService {
         );
     }
 
-    public AvailabilityResponse createAvailability(AvailabilityRequest dto) {
-
-        Caregiver caregiver = (Caregiver) userRepository.findById(dto.getCaregiverId())
-                .filter(Caregiver.class::isInstance)
-                .stream()
-                .map(Caregiver.class::cast);
-
-        Availability availability = new Availability();
-        availability.setCaregiver(caregiver);
-        availability.setReoccurring(dto.isReoccurring());
-        availability.setStartTime(dto.getStartTime());
-        availability.setEndTime(dto.getEndTime());
-        availability.setCreatedAt(LocalDate.now());
-
-        Availability saved = availabilityRepository.save(availability);
-
-        return mapToResponse(saved);
-    }
-
-    public List<AvailabilityResponse> getAllAvailabilities() {
-        return availabilityRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
-
-    public AvailabilityResponse getAvailabilityById(Long id) {
-        Availability availability = availabilityRepository.findById(id).orElse(null);
-        return mapToResponse(availability);
-    }
 }

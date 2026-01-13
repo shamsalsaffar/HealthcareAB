@@ -47,4 +47,5 @@ public class AvailabilityRequest {
     public void setCaregiverId(Long caregiverId) {
         this.caregiverId = caregiverId;
     }
+
 }

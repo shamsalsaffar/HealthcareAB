@@ -50,4 +50,5 @@ public class AvailabilityResponse {
     public LocalDate getCreatedAt() {
         return createdAt;
     }
+
 }
