@@ -14,10 +14,10 @@ public class Availability {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Caregiver id is required")
+    @NotNull(message = "Caregiver is required")
     @ManyToOne
     @JoinColumn(name = "caregiver_id", nullable = false)
-    private Caregiver caregiverId;
+    private Caregiver caregiver;
 
     @NotNull(message = "Start time is required")
     @Column(name = "start_time", nullable = false)
@@ -37,12 +37,12 @@ public class Availability {
     }
 
     public Availability(
-            Caregiver caregiverId,
+            Caregiver caregiver,
             LocalDate startTime,
             LocalDate endTime,
             boolean reoccurring
     ) {
-        this.caregiverId = caregiverId;
+        this.caregiver = caregiver;
         this.startTime = startTime;
         this.endTime = endTime;
         this.reoccurring = reoccurring;
@@ -53,12 +53,12 @@ public class Availability {
         return id;
     }
 
-    public Caregiver getCaregiverId() {
-        return caregiverId;
+    public Caregiver getCaregiver() {
+        return caregiver;
     }
 
-    public void setCaregiverId(Caregiver caregiverId) {
-        this.caregiverId = caregiverId;
+    public void setCaregiver(Caregiver caregiver) {
+        this.caregiver = caregiver;
     }
 
     public LocalDate getStartTime() {

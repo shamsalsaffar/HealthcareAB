@@ -6,6 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AvailabilityRepository extends JpaRepository<Availability, Long> {
-    //public AvailabilityResponse getAvailabilityByCaregiverId(Long caregiverId)
     List<Availability> findByCaregiver_Id(Long caregiverId);
 }
