@@ -47,7 +47,9 @@ public class SecurityConfig {
                 // OBS! should not be disabled in production
                 .csrf(csrf -> csrf.disable())
                 // define URL based rules
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/caregiver/find-by-user-id").permitAll()
                         // any other requests the user need to be logged
                         .anyRequest().authenticated())
                 // disable session due to jwt statelessness
