@@ -88,7 +88,7 @@ public class SecurityConfig {
                 "Authorization",
                 "Content-Type",
                 "Accept",
-                "Origin", //Utan Origin kan CORS ibland bli konstigt vid preflight
+                "Origin", // Utan Origin kan CORS ibland bli konstigt vid preflight
                 "Cookie"));
 
         //  headers frontend can READ from the response
