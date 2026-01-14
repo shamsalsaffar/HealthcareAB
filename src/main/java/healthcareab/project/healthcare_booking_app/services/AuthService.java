@@ -37,7 +37,6 @@ public class AuthService {
         return userRepository.save(patient); //  Patient extends User
     }
 
-
     // check if username already exists
     public boolean existsByUsername(String username) {
         return userRepository.findByUsername(username).isPresent();
