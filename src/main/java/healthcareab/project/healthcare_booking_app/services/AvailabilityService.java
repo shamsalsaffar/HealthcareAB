@@ -3,6 +3,7 @@ package healthcareab.project.healthcare_booking_app.services;
 import healthcareab.project.healthcare_booking_app.dto.AvailabilityRequest;
 import healthcareab.project.healthcare_booking_app.dto.AvailabilityResponse;
 import healthcareab.project.healthcare_booking_app.dto.AvailabilityUpdateRequest;
+import healthcareab.project.healthcare_booking_app.exception.ResourceNotFoundException;
 import healthcareab.project.healthcare_booking_app.models.Availability;
 import healthcareab.project.healthcare_booking_app.models.Caregiver;
 import healthcareab.project.healthcare_booking_app.repository.AvailabilityRepository;
@@ -29,7 +30,7 @@ public class AvailabilityService {
         Caregiver caregiver = userRepository.findById(dtoRequest.getCaregiverId())
                 .filter(Caregiver.class::isInstance)
                 .map(Caregiver.class::cast)
-                .orElseThrow(() -> new RuntimeException("Caregiver not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Caregiver not found"));
 
         Availability availability = new Availability();
         availability.setCaregiver(caregiver);
@@ -45,7 +46,7 @@ public class AvailabilityService {
 
     public AvailabilityResponse getAvailabilityById(Long id) {
         Availability availability = availabilityRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("No availability found"));
+                new ResourceNotFoundException("No availability found"));
         return mapToResponse(availability);
     }
 
@@ -58,7 +59,7 @@ public class AvailabilityService {
 
     public AvailabilityResponse updateAvailability(AvailabilityUpdateRequest dtoUpdate, Long id) {
         Availability availability = availabilityRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("No availability found"));
+                new ResourceNotFoundException("No availability found"));
 
         if (dtoUpdate.getStartTime() != null){
             availability.setStartTime(dtoUpdate.getStartTime());
@@ -77,11 +78,10 @@ public class AvailabilityService {
 
     public void deleteAvailability(Long id) {
         if (!availabilityRepository.existsById(id)) {
-            throw new RuntimeException("Availability not found");
+            throw new ResourceNotFoundException("No availability found");
         }
         availabilityRepository.deleteById(id);
     }
-
 
     private AvailabilityResponse mapToResponse(Availability availability) {
         return new AvailabilityResponse(
