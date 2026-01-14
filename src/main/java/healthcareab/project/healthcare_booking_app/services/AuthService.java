@@ -1,5 +1,6 @@
 package healthcareab.project.healthcare_booking_app.services;
 
+import healthcareab.project.healthcare_booking_app.models.Patient;
 import healthcareab.project.healthcare_booking_app.models.User;
 import healthcareab.project.healthcare_booking_app.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,6 +31,12 @@ public class AuthService {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
+    public Patient registerPatient(Patient patient) {
+        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+        return userRepository.save(patient); //  Patient extends User
+    }
+
 
     // check if username already exists
     public boolean existsByUsername(String username) {

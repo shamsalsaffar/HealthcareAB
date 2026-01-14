@@ -2,13 +2,13 @@ package healthcareab.project.healthcare_booking_app.controllers;
 
 import healthcareab.project.healthcare_booking_app.dto.AuthRequest;
 import healthcareab.project.healthcare_booking_app.dto.AuthResponse;
-import healthcareab.project.healthcare_booking_app.dto.RegisterRequest;
+import healthcareab.project.healthcare_booking_app.dto.PatientRegisterRequest;
 import healthcareab.project.healthcare_booking_app.dto.RegisterResponse;
-import healthcareab.project.healthcare_booking_app.models.User;
+import healthcareab.project.healthcare_booking_app.models.Patient;
 import healthcareab.project.healthcare_booking_app.models.enums.Role;
+import healthcareab.project.healthcare_booking_app.repository.PatientRepository;
 import healthcareab.project.healthcare_booking_app.services.AuthService;
 import healthcareab.project.healthcare_booking_app.utils.JwtUtil;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,115 +21,169 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final AuthService authService;
+    private final PatientRepository patientRepository;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, AuthService authService) {
+    public AuthController(AuthenticationManager authenticationManager,
+                          JwtUtil jwtUtil,
+                          AuthService authService,
+                          PatientRepository patientRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.authService = authService;
+        this.patientRepository = patientRepository;
     }
 
+    // =========================
+    // REGISTER PATIENT
+    // =========================
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> register(@Valid @RequestBody PatientRegisterRequest req) {
 
-        if (authService.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists.");
+        // Email uniqueness
+        if (patientRepository.existsByUsername(req.getUsername())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists.");
         }
 
-        User user = new User();
-        user.setUsername(registerRequest.getUsername());
-        user.setPassword(registerRequest.getPassword());
-        user.setUsername(registerRequest.getUsername());
-        user.setFirstName(registerRequest.getFirstName());
-        user.setLastName(registerRequest.getLastName());
+        // PIN uniqueness
+        if (patientRepository.existsByPersonalIdentityNumber(req.getPersonalIdentityNumber())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Personal identity number already exists.");
+        }
 
-        // security breach!
-        /*
-         * if (registerRequest.getRole() == null) { user.setRole(Role.USER); } else {
-         * user.setRole(registerRequest.getRole()); }
-         */
+        Patient patient = new Patient();
+        patient.setUsername(req.getUsername());
+        patient.setPassword(req.getPassword()); // will be encoded in AuthService
+        patient.setFirstName(req.getFirstName());
+        patient.setLastName(req.getLastName());
 
-        user.setRole(Role.USER);
+        patient.setAddress(req.getAddress());
+        patient.setPhoneNumber(req.getPhoneNumber());
+        patient.setPersonalIdentityNumber(req.getPersonalIdentityNumber());
 
-        authService.registerUser(user);
+        patient.setRole(Role.USER);
 
-        RegisterResponse response = new RegisterResponse("User registered successfully", user.getUsername(),
-                user.getRole());
+        authService.registerPatient(patient);
 
-        // return ResponseEntity.status(HttpStatus.CREATED).body("Run Test");
+        RegisterResponse response = new RegisterResponse(
+                "Patient registered successfully",
+                patient.getUsername(),
+                patient.getRole()
+        );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    // =========================
+    // LOGIN
+    // =========================
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest) {
 
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
+            );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
             String jwt = jwtUtil.generateToken(userDetails);
-            ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt).httpOnly(true) // prevents javascript to get
-                                                                                      // cookie
-                    .secure(false) // IMPORTANT TO CHANGE IN PRODUCTION TO TRUE
-                    .path("/") // cookies is available in all application
-                    .maxAge(10 * 60 * 60) // valid for 10h
-                    .sameSite("Lax") // Lax & None
+
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt)
+                    .httpOnly(true)
+                    .secure(false) // IMPORTANT: true in production (HTTPS)
+                    .path("/")
+                    .maxAge(10 * 60 * 60)
+                    .sameSite("Lax")
                     .build();
 
-            AuthResponse authResponse = new AuthResponse(jwt, userDetails.getUsername(),
-                    authService.findByUsername(userDetails.getUsername()).getRole(),
-                    authService.findByUsername(userDetails.getUsername()).getUsername(),
-                    authService.findByUsername(userDetails.getUsername()).getFirstName(),
-                    authService.findByUsername(userDetails.getUsername()).getLastName(), "Login successful");
+            // Fetch patient to include patient fields
+            Patient patient = patientRepository.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("Patient not found"));
 
-            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(authResponse);
+            // NOTE: do NOT return personalIdentityNumber (sensitive)
+            AuthResponse authResponse = new AuthResponse(
+                    jwt,
+                    patient.getUsername(),
+                    patient.getRole(),
+                    patient.getUsername(),   // email
+                    patient.getFirstName(),
+                    patient.getLastName(),
+                    patient.getPhoneNumber(),
+                    patient.getAddress(),
+                    "Login successful"
+            );
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                    .body(authResponse);
 
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
         }
     }
 
+    // =========================
+    // LOGOUT
+    // =========================
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
-        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "").httpOnly(true).secure(false) // VIKTIGT! ändra i
-                                                                                               // production
-                .path("/").maxAge(0).sameSite("Strict").build();
+    public ResponseEntity<?> logout() {
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "")
+                .httpOnly(true)
+                .secure(false) // IMPORTANT: true in production (HTTPS)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
 
         SecurityContextHolder.clearContext();
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body("Logout successful!");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body("Logout successful!");
     }
 
+    // =========================
+    // CHECK AUTH (ME)
+    // =========================
     @GetMapping("/check")
     public ResponseEntity<?> checkAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()
+        if (authentication == null
+                || !authentication.isAuthenticated()
                 || authentication instanceof AnonymousAuthenticationToken) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated!");
         }
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = authService.findByUsername(userDetails.getUsername());
 
-        return ResponseEntity.ok(new AuthResponse("Authenticated", user.getUsername(), user.getRole(),
-                user.getUsername(), user.getFirstName(), user.getLastName(), null));
+        // get full patient info
+        Patient patient = patientRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Patient not found"));
+
+        AuthResponse response = new AuthResponse(
+                null, // since token is in cookie, you can keep this null (or remove jwt from response)
+                patient.getUsername(),
+                patient.getRole(),
+                patient.getUsername(),
+                patient.getFirstName(),
+                patient.getLastName(),
+                patient.getPhoneNumber(),
+                patient.getAddress(),
+                "Authenticated"
+        );
+
+        return ResponseEntity.ok(response);
     }
-
 }
