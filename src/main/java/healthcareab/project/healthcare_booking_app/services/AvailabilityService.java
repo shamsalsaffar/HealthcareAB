@@ -2,6 +2,7 @@ package healthcareab.project.healthcare_booking_app.services;
 
 import healthcareab.project.healthcare_booking_app.dto.AvailabilityRequest;
 import healthcareab.project.healthcare_booking_app.dto.AvailabilityResponse;
+import healthcareab.project.healthcare_booking_app.dto.AvailabilityUpdateRequest;
 import healthcareab.project.healthcare_booking_app.models.Availability;
 import healthcareab.project.healthcare_booking_app.models.Caregiver;
 import healthcareab.project.healthcare_booking_app.repository.AvailabilityRepository;
@@ -23,18 +24,18 @@ public class AvailabilityService {
     }
 
     //TODO need to check auth before update. just wanna check if it works first
-    public AvailabilityResponse createAvailability(AvailabilityRequest dto) {
+    public AvailabilityResponse createAvailability(AvailabilityRequest dtoRequest) {
 
-        Caregiver caregiver = userRepository.findById(dto.getCaregiverId())
+        Caregiver caregiver = userRepository.findById(dtoRequest.getCaregiverId())
                 .filter(Caregiver.class::isInstance)
                 .map(Caregiver.class::cast)
                 .orElseThrow(() -> new RuntimeException("Caregiver not found"));
 
         Availability availability = new Availability();
         availability.setCaregiver(caregiver);
-        availability.setReoccurring(dto.getReoccurring());
-        availability.setStartTime(dto.getStartTime());
-        availability.setEndTime(dto.getEndTime());
+        availability.setReoccurring(dtoRequest.getReoccurring());
+        availability.setStartTime(dtoRequest.getStartTime());
+        availability.setEndTime(dtoRequest.getEndTime());
         availability.setCreatedAt(LocalDate.now());
 
         availabilityRepository.save(availability);
@@ -55,18 +56,18 @@ public class AvailabilityService {
                 .toList();
     }
 
-    public AvailabilityResponse updateAvailability(AvailabilityRequest dto, Long id) {
+    public AvailabilityResponse updateAvailability(AvailabilityUpdateRequest dtoUpdate, Long id) {
         Availability availability = availabilityRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("No availability found"));
 
-        if (dto.getStartTime() != null){
-            availability.setStartTime(dto.getStartTime());
+        if (dtoUpdate.getStartTime() != null){
+            availability.setStartTime(dtoUpdate.getStartTime());
         }
-        if (dto.getEndTime() != null){
-            availability.setEndTime(dto.getEndTime());
+        if (dtoUpdate.getEndTime() != null){
+            availability.setEndTime(dtoUpdate.getEndTime());
         }
-        if (dto.getReoccurring() != null){
-            availability.setReoccurring(dto.getReoccurring());
+        if (dtoUpdate.getReoccurring() != null){
+            availability.setReoccurring(dtoUpdate.getReoccurring());
         }
 
         availabilityRepository.save(availability);

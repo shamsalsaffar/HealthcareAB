@@ -2,6 +2,7 @@ package healthcareab.project.healthcare_booking_app.controllers;
 
 import healthcareab.project.healthcare_booking_app.dto.AvailabilityRequest;
 import healthcareab.project.healthcare_booking_app.dto.AvailabilityResponse;
+import healthcareab.project.healthcare_booking_app.dto.AvailabilityUpdateRequest;
 import healthcareab.project.healthcare_booking_app.services.AvailabilityService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,29 +25,31 @@ public class AvailabilityController {
 //    @PreAuthorize("hasRole('CAREGIVER')")
     @PostMapping
     public ResponseEntity<AvailabilityResponse> createAvailability(
-            @Valid @RequestBody AvailabilityRequest availabilityRequest) {
-        AvailabilityResponse availabilityResponse = availabilityService
-                .createAvailability(availabilityRequest);
+            @Valid @RequestBody AvailabilityRequest dtoRequest) {
+        AvailabilityResponse dtoResponse = availabilityService
+                .createAvailability(dtoRequest);
 //        return ResponseEntity.ok(availabilityResponse);
-        return new ResponseEntity<>(availabilityResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<AvailabilityResponse>> getAllAvailabilities() {
-        List<AvailabilityResponse> availabilityResponse = availabilityService.getAllAvailabilities();
-        return new ResponseEntity<>(availabilityResponse, HttpStatus.OK);
+        List<AvailabilityResponse> dtoResponse = availabilityService.getAllAvailabilities();
+        return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AvailabilityResponse> getAvailabilityById(@PathVariable Long id) {
-        AvailabilityResponse availabilityResponse = availabilityService.getAvailabilityById(id);
-        return ResponseEntity.ok(availabilityResponse);
+        AvailabilityResponse dtoResponse = availabilityService.getAvailabilityById(id);
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<AvailabilityResponse> updateAvailability(
-            @PathVariable Long id, @Valid @RequestBody AvailabilityRequest availabilityRequest) {
-        return ResponseEntity.ok(availabilityService.updateAvailability(availabilityRequest, id));
+            @PathVariable Long id,
+            @Valid @RequestBody AvailabilityUpdateRequest dtoUpdate) {
+        return ResponseEntity.ok(availabilityService.updateAvailability(dtoUpdate, id)
+        );
     }
 
     @DeleteMapping("/{id}")
