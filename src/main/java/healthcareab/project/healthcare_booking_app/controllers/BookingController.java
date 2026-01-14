@@ -2,14 +2,31 @@ package healthcareab.project.healthcare_booking_app.controllers;
 
 import healthcareab.project.healthcare_booking_app.models.Booking;
 import healthcareab.project.healthcare_booking_app.services.BookingService;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class BookingController {
 
     private BookingService bookingService;
 
-    public Booking createBooking(Booking booking){
+    @PostMapping("/booking")
+    public Booking createBooking(@RequestBody Booking booking){
+
+//        List<String> errors;
+//
+//        errors = bookingService.validateBooking(booking);
+//
+//        if (!errors.isEmpty()){
+//            StringBuilder realError = new StringBuilder();
+//            for (String error : errors){
+//                realError.append(error);
+//            }
+//            throw new IllegalArgumentException(realError.toString());
+//        }
 
         return bookingService.createBooking(booking);
     }
