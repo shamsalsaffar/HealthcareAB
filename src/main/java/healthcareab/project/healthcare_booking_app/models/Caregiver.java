@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "caregivers")
 public class Caregiver extends User {
 
+
     @Enumerated(EnumType.STRING)
     private Specialisation specialisation;
 

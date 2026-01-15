@@ -14,7 +14,7 @@ public class Patient extends User {
 
     @NotNull(message = "Adress can not be empty")
     @Size(max = 100, message = "Your adress can not exceed 100 symbols")
-    private String adress;
+    private String address;
 
     @NotNull(message = "Phone number cannot be empty")
     @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$", message = "Invalid Swedish mobile phone number")
@@ -26,7 +26,7 @@ public class Patient extends User {
     private String personalIdentityNumber;
 
     public Patient(String adress, String phoneNumber, String personalIdentityNumber) {
-        this.adress = adress;
+        this.address = adress;
         this.phoneNumber = phoneNumber;
         this.personalIdentityNumber = personalIdentityNumber;
     }
@@ -37,18 +37,18 @@ public class Patient extends User {
     public Patient(String username, String password, Role role, String adress, String phoneNumber,
             String personalIdentityNumber) {
         super(username, password, role);
-        this.adress = adress;
+        this.address = adress;
         this.phoneNumber = phoneNumber;
         this.personalIdentityNumber = personalIdentityNumber;
     }
 
-    public @NotNull(message = "Adress can not be empty") @Size(max = 100, message = "Your adress can not exceed 100 symbols") String getAdress() {
-        return adress;
+    public @NotNull(message = "Adress can not be empty") @Size(max = 100, message = "Your adress can not exceed 100 symbols") String getAddress() {
+        return address;
     }
 
-    public void setAdress(
+    public void setAddress(
             @NotNull(message = "Adress can not be empty") @Size(max = 100, message = "Your adress can not exceed 100 symbols") String adress) {
-        this.adress = adress;
+        this.address = adress;
     }
 
     public @NotNull(message = "Phone number cannot be empty") @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$", message = "Invalid Swedish mobile phone number") String getPhoneNumber() {
