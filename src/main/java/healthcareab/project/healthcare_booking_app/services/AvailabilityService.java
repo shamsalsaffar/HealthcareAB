@@ -50,6 +50,12 @@ public class AvailabilityService {
     }
 
     public List<AvailabilityResponse> getAllAvailabilities() {
+        List<Availability> availabilities = availabilityRepository.findAll();
+
+        if (availabilities.isEmpty()) {
+            throw new ResourceNotFoundException("No availabilities found");
+        }
+
         return availabilityRepository.findAll()
                 .stream()
                 .map(this::mapToResponse)
