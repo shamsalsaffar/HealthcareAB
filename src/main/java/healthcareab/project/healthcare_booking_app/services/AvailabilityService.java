@@ -24,7 +24,6 @@ public class AvailabilityService {
         this.userRepository = userRepository;
     }
 
-    //TODO need to check auth before update. just wanna check if it works first
     public AvailabilityResponse createAvailability(AvailabilityRequest dtoRequest) {
 
         Caregiver caregiver = userRepository.findById(dtoRequest.getCaregiverId())

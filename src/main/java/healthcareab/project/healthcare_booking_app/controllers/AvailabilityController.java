@@ -21,14 +21,13 @@ public class AvailabilityController {
         this.availabilityService = availabilityService;
     }
 
-    //TODO need to fix the auth. just wanna check if it works first
+    //TODO at the moment it doesnt check auth. fix for later issue.
 //    @PreAuthorize("hasRole('CAREGIVER')")
     @PostMapping
     public ResponseEntity<AvailabilityResponse> createAvailability(
             @Valid @RequestBody AvailabilityRequest dtoRequest) {
         AvailabilityResponse dtoResponse = availabilityService
                 .createAvailability(dtoRequest);
-//        return ResponseEntity.ok(availabilityResponse);
         return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
     }
 

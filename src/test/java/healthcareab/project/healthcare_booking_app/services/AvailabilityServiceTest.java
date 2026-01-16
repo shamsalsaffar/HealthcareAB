@@ -6,6 +6,7 @@ import healthcareab.project.healthcare_booking_app.dto.AvailabilityUpdateRequest
 import healthcareab.project.healthcare_booking_app.exception.ResourceNotFoundException;
 import healthcareab.project.healthcare_booking_app.models.Availability;
 import healthcareab.project.healthcare_booking_app.models.Caregiver;
+import healthcareab.project.healthcare_booking_app.models.User;
 import healthcareab.project.healthcare_booking_app.repository.AvailabilityRepository;
 import healthcareab.project.healthcare_booking_app.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,19 +60,22 @@ public class AvailabilityServiceTest {
 
     @Test
     void whenGetAvailabilityById_shouldReturnSuccess() {
-        //Arrange
+        // Arrange
         AvailabilityRequest request = validRequest();
 
-        Availability save = new Availability();
-        save.setCaregiver(caregiver);
+        Availability existing = new Availability();
+        existing.setCaregiver(caregiver);
+        existing.setStartTime(request.getStartTime());
+        existing.setEndTime(request.getEndTime());
+        existing.setReoccurring(false);
 
-        when(availabilityRepository.findById(10L)).thenReturn(Optional.of(caregiver));
+        when(availabilityRepository.findById(10L)).thenReturn(Optional.of(existing));
+        when(caregiver.getId()).thenReturn(1L);
 
-        //Act
-        AvailabilityResponse response =
-                availabilityService.getAvailabilityById(10L);
+        // Act
+        AvailabilityResponse response = availabilityService.getAvailabilityById(10L);
 
-        //Assert
+        // Assert
         assertThat(response.getCaregiverId()).isEqualTo(1L);
     }
 
@@ -133,12 +138,28 @@ public class AvailabilityServiceTest {
     }
 
     @Test
+    void whenCreateAvailability_shouldThrowIfUserIsNotCaregiver() {
+        //Arrange
+        AvailabilityRequest request = validRequest();
+
+        //Mock a user that's not a Caregiver
+        User normalUser = mock(User.class);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(normalUser));
+
+        //Act & Assert
+        assertThrows(ResourceNotFoundException.class,
+                () -> availabilityService.createAvailability(request));
+    }
+
+    @Test
     void whenGetAvailabilityById_shouldThrowAvailabilityNotFound() {
         //Arrange
+        when(availabilityRepository.findById(10L)).thenReturn(Optional.empty());
 
-        //Act
-
-        //Assert
+        //Act & Assert
+        assertThrows(ResourceNotFoundException.class,
+                () -> availabilityService.getAvailabilityById(10L));
     }
 
     @Test
@@ -166,10 +187,11 @@ public class AvailabilityServiceTest {
     @Test
     void whenDeleteAvailability_shouldThrowNotFound() {
         //Arrange
+        when(availabilityRepository.findById(10L)).thenReturn(Optional.empty());
 
-        //Act
+        //Act & Assert
 
-        //Assert
+
     }
 
 //    @Test
