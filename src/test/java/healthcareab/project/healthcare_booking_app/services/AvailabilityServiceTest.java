@@ -16,13 +16,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AvailabilityServiceTest {
@@ -47,8 +47,8 @@ public class AvailabilityServiceTest {
         Availability save = new Availability();
         save.setCaregiver(caregiver);
 
-        when(caregiver.getId()).thenReturn(1L);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(caregiver));
+        mockCaregiverFound();
+
         when(availabilityRepository.save(any(Availability.class))).thenReturn(save);
 
         //Act
@@ -61,16 +61,9 @@ public class AvailabilityServiceTest {
     @Test
     void whenGetAvailabilityById_shouldReturnSuccess() {
         // Arrange
-        AvailabilityRequest request = validRequest();
-
-        Availability existing = new Availability();
-        existing.setCaregiver(caregiver);
-        existing.setStartTime(request.getStartTime());
-        existing.setEndTime(request.getEndTime());
-        existing.setReoccurring(false);
-
-        when(availabilityRepository.findById(10L)).thenReturn(Optional.of(existing));
+        Availability existing = availabilityEntity();
         when(caregiver.getId()).thenReturn(1L);
+        when(availabilityRepository.findById(10L)).thenReturn(Optional.of(existing));
 
         // Act
         AvailabilityResponse response = availabilityService.getAvailabilityById(10L);
@@ -79,14 +72,23 @@ public class AvailabilityServiceTest {
         assertThat(response.getCaregiverId()).isEqualTo(1L);
     }
 
-//    @Test
-//    void whenGetAllAvailability_shouldReturnSuccess() {
-//        //Arrange
-//
-//        //Act
-//
-//        //Assert
-//    }
+    @Test
+    void whenGetAllAvailability_shouldReturnSuccess() {
+        //Arrange
+        Availability a1 = availabilityEntity();
+        Availability a2 = availabilityEntity();
+
+        when(availabilityRepository.findAll()).thenReturn(List.of(a1, a2));
+        when(caregiver.getId()).thenReturn(1L);
+
+        //Act
+        List<AvailabilityResponse> result =
+                availabilityService.getAllAvailabilities();
+
+        //Assert
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getCaregiverId()).isEqualTo(1L);
+    }
 
     @Test
     void whenUpdateAvailability_shouldReturnSuccess() {
@@ -94,21 +96,11 @@ public class AvailabilityServiceTest {
         AvailabilityUpdateRequest updateRequest = new AvailabilityUpdateRequest();
         updateRequest.setReoccurring(true);
 
-        Availability existing = new Availability();
-        existing.setCaregiver(caregiver);
-        existing.setStartTime(LocalDate.now());
-        existing.setEndTime(LocalDate.now());
-        existing.setReoccurring(false);
-
-        Availability save = new Availability();
-        save.setCaregiver(caregiver);
-        save.setStartTime(existing.getStartTime());
-        save.setEndTime(existing.getEndTime());
-        save.setReoccurring(true);
+        Availability existing = availabilityEntity();
 
         when(availabilityRepository.findById(10L))
                 .thenReturn(Optional.of(existing));
-        when(availabilityRepository.save(any(Availability.class))).thenReturn(save);
+        when(availabilityRepository.save(any(Availability.class))).thenReturn(existing);
 
         //Act
         AvailabilityResponse response =
@@ -121,20 +113,25 @@ public class AvailabilityServiceTest {
     @Test
     void whenDeleteAvailability_shouldReturnSuccess() {
         //Arrange
+        when(availabilityRepository.existsById(10L)).thenReturn(true);
 
         //Act
+        availabilityService.deleteAvailability(10L);
 
         //Assert
+        verify(availabilityRepository).deleteById(10L);
     }
 
     //TODO Unhappy cases
     @Test
     void whenCreateAvailability_shouldReturnCaregiverNotFound() {
         //Arrange
+        AvailabilityRequest request = validRequest();
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        //Act
-
-        //Assert
+        //Act & Assert
+        assertThrows(ResourceNotFoundException.class,
+                () -> availabilityService.createAvailability(request));
     }
 
     @Test
@@ -163,45 +160,27 @@ public class AvailabilityServiceTest {
     }
 
     @Test
-    void whenUpdateAvailabilityWithEmptyDto_shouldNotChangeFields() {
-        //Arrange
-
-        //Act
-
-        //Assert
-    }
-
-    @Test
     void whenUpdateAvailability_shouldThrowNotFound() {
         //Arrange
         AvailabilityUpdateRequest updateRequest = new AvailabilityUpdateRequest();
-        when(availabilityRepository.findById(/*10*/1L)).thenReturn(Optional.empty());
+        when(availabilityRepository.findById(10L)).thenReturn(Optional.empty());
 
         //Act & Assert
         assertThrows(
                 ResourceNotFoundException.class,
-                () -> availabilityService.updateAvailability(updateRequest, 1L)
-        );
+                () -> availabilityService.updateAvailability(updateRequest, 10L));
     }
 
     @Test
     void whenDeleteAvailability_shouldThrowNotFound() {
         //Arrange
-        when(availabilityRepository.findById(10L)).thenReturn(Optional.empty());
+        when(availabilityRepository.existsById(10L)).thenReturn(false);
 
         //Act & Assert
-
-
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> availabilityService.deleteAvailability(10L));
     }
-
-//    @Test
-//    void whenGetAllAvailability_shouldReturnEmptyList() {
-//        //Arrange
-//
-//        //Act
-//
-//        //Assert
-//    }
 
     //help method so the same code don't need to be repeated
     private AvailabilityRequest validRequest() {
@@ -213,13 +192,18 @@ public class AvailabilityServiceTest {
         return availability;
     }
 
-//    private Availability availabilityEntity(Long id) {
-//        Availability a = new Availability();
-//        a.setCaregiver(caregiver);
-//        a.setStartTime(LocalDate.now());
-//        a.setEndTime(LocalDate.now());
-//        a.setReoccurring(false);
-//        return a;
-//    }
+    private Availability availabilityEntity() {
+        Availability entity = new Availability();
+        entity.setCaregiver(caregiver);
+        entity.setStartTime(LocalDate.now());
+        entity.setEndTime(LocalDate.now());
+        entity.setReoccurring(false);
+        return entity;
+    }
+
+    private void mockCaregiverFound() {
+        when(caregiver.getId()).thenReturn(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(caregiver));
+    }
 
 }
