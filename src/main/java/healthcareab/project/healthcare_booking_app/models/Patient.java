@@ -12,60 +12,60 @@ import jakarta.validation.constraints.Size;
 @Table(name = "patients")
 public class Patient extends User {
 
-    @NotNull(message = "Adress can not be empty")
-    @Size(max = 100, message = "Your adress can not exceed 100 symbols")
-    private String adress;
+    @NotNull(message = "Address can not be empty")
+    @Size(max = 100, message = "Your address can not exceed 100 characters")
+    @Column(name = "address", nullable = false)
+    private String address;
 
     @NotNull(message = "Phone number cannot be empty")
-    @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$", message = "Invalid Swedish mobile phone number")
+    @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$",
+            message = "Invalid Swedish mobile phone number")
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Pattern(regexp = "^(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{4}$", message = "Invalid personal identity number (YYYYMMDDXXXX)")
-    @Column(unique = true)
     @NotNull(message = "Personal identity number cannot be empty")
+    @Pattern(regexp = "^(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{4}$",
+            message = "Invalid personal identity number (YYYYMMDDXXXX)")
+    @Column(name = "personal_identity_number", unique = true, nullable = false)
     private String personalIdentityNumber;
 
-    public Patient(String adress, String phoneNumber, String personalIdentityNumber) {
-        this.adress = adress;
+    public Patient() {}
+
+    public Patient(String address, String phoneNumber, String personalIdentityNumber) {
+        this.address = address;
         this.phoneNumber = phoneNumber;
         this.personalIdentityNumber = personalIdentityNumber;
     }
 
-    public Patient() {
-    }
-
-    public Patient(String username, String password, Role role, String adress, String phoneNumber,
-            String personalIdentityNumber) {
+    public Patient(String username, String password, Role role,
+                   String address, String phoneNumber, String personalIdentityNumber) {
         super(username, password, role);
-        this.adress = adress;
+        this.address = address;
         this.phoneNumber = phoneNumber;
         this.personalIdentityNumber = personalIdentityNumber;
     }
 
-    public @NotNull(message = "Adress can not be empty") @Size(max = 100, message = "Your adress can not exceed 100 symbols") String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(
-            @NotNull(message = "Adress can not be empty") @Size(max = 100, message = "Your adress can not exceed 100 symbols") String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public @NotNull(message = "Phone number cannot be empty") @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$", message = "Invalid Swedish mobile phone number") String getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(
-            @NotNull(message = "Phone number cannot be empty") @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$", message = "Invalid Swedish mobile phone number") String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public @Pattern(regexp = "^(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{4}$", message = "Invalid personal identity number (YYYYMMDDXXXX)") @NotNull(message = "Personal identity number cannot be empty") String getPersonalIdentityNumber() {
+    public String getPersonalIdentityNumber() {
         return personalIdentityNumber;
     }
 
-    public void setPersonalIdentityNumber(
-            @Pattern(regexp = "^(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{4}$", message = "Invalid personal identity number (YYYYMMDDXXXX)") @NotNull(message = "Personal identity number cannot be empty") String personalIdentityNumber) {
+    public void setPersonalIdentityNumber(String personalIdentityNumber) {
         this.personalIdentityNumber = personalIdentityNumber;
     }
 }
