@@ -5,10 +5,12 @@ import healthcareab.project.healthcare_booking_app.dto.AuthResponse;
 import healthcareab.project.healthcare_booking_app.dto.PatientRegisterRequest;
 import healthcareab.project.healthcare_booking_app.dto.RegisterResponse;
 import healthcareab.project.healthcare_booking_app.models.Patient;
+import healthcareab.project.healthcare_booking_app.models.User;
 import healthcareab.project.healthcare_booking_app.models.enums.EmailVerificationToken;
 import healthcareab.project.healthcare_booking_app.models.enums.Role;
 import healthcareab.project.healthcare_booking_app.repository.EmailVerificationTokenRepository;
 import healthcareab.project.healthcare_booking_app.repository.PatientRepository;
+import healthcareab.project.healthcare_booking_app.repository.UserRepository;
 import healthcareab.project.healthcare_booking_app.services.AuthService;
 import healthcareab.project.healthcare_booking_app.services.MailService;
 import healthcareab.project.healthcare_booking_app.utils.JwtUtil;
@@ -29,7 +31,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -44,19 +48,21 @@ public class AuthController {
     private final PatientRepository patientRepository;
     private final MailService mailService;
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
+    private final UserRepository userRepository;
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtUtil jwtUtil,
                           AuthService authService,
                           PatientRepository patientRepository,
                           MailService mailService,
-                          EmailVerificationTokenRepository emailVerificationTokenRepository) {
+                          EmailVerificationTokenRepository emailVerificationTokenRepository, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.authService = authService;
         this.patientRepository = patientRepository;
         this.mailService = mailService;
         this.emailVerificationTokenRepository = emailVerificationTokenRepository;
+        this.userRepository = userRepository;
     }
 
     // =========================
@@ -96,6 +102,9 @@ public class AuthController {
         emailVerificationToken.setToken(token);
         emailVerificationToken.setUser(saved);
         emailVerificationToken.setExpiresAt(LocalDateTime.now().plusHours(24));
+        emailVerificationTokenRepository.findByUserId(saved.getId())
+                .ifPresent(emailVerificationTokenRepository::delete);
+
         emailVerificationTokenRepository.save(emailVerificationToken);
 
         //send email
@@ -120,6 +129,41 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }*/
+
+    // =========================
+    // VERIFY
+    // =========================
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
+        EmailVerificationToken emailVerificationToken= emailVerificationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token"));
+        if (emailVerificationToken.isUsed()) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token already used.");
+        }
+        if (emailVerificationToken.isExpired()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token has expired.");
+        }
+        User user = emailVerificationToken.getUser();
+        user.setEnabled(true);
+        user.setEmailVerifiedAt(LocalDateTime.now());
+        userRepository.save(user);
+
+        emailVerificationToken.setUsedAt(LocalDateTime.now());
+        emailVerificationTokenRepository.save(emailVerificationToken);
+
+        String msg = "✅ Email verified successfully!\n"
+                + "You can now log in.\n\n"
+                + "👤 Username: " + user.getUsername() + "\n"
+                + "🔐 Role: " + user.getRole();
+
+        return ResponseEntity.ok(new RegisterResponse(
+                msg,
+                user.getUsername(),
+                user.getRole()
+        ));
+
+    }
 
     // =========================
     // LOGIN
@@ -225,4 +269,5 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
+
 }
