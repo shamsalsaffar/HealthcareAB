@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/caregiver/find-by-user-id").permitAll()
+                        .requestMatchers("/api/availabilities/**").permitAll()
                         .anyRequest().authenticated())
 
                 // disable session due to jwt statelessness
@@ -69,6 +70,7 @@ public class SecurityConfig {
                             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                             response.setContentType("application/json");
                             response.getWriter().write("{\"status\":403,\"message\":\"Forbidden\"}");
+
                         }))
                 // add jwt filter before standard filter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
