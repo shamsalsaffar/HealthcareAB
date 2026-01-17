@@ -59,13 +59,20 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false)
+    private boolean enabled;
+
+    private LocalDateTime emailVerifiedAt;
+
     public User() {
     }
 
-    public User(String username, String password, Role role) {
+    public User(String username, String password, Role role,
+               boolean enabled) {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.enabled = false;
     }
 
     public Long getId() {
@@ -136,5 +143,21 @@ public class User {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public LocalDateTime getEmailVerifiedAt() {
+        return emailVerifiedAt;
+    }
+
+    public void setEmailVerifiedAt(LocalDateTime emailVerifiedAt) {
+        this.emailVerifiedAt = emailVerifiedAt;
     }
 }
