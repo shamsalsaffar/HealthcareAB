@@ -152,13 +152,10 @@ public class AuthController {
         emailVerificationToken.setUsedAt(LocalDateTime.now());
         emailVerificationTokenRepository.save(emailVerificationToken);
 
-        String msg = "✅ Email verified successfully!\n"
-                + "You can now log in.\n\n"
-                + "👤 Username: " + user.getUsername() + "\n"
-                + "🔐 Role: " + user.getRole();
+
 
         return ResponseEntity.ok(new RegisterResponse(
-                msg,
+                " Email verified successfully!+ \n + ",
                 user.getUsername(),
                 user.getRole()
         ));
