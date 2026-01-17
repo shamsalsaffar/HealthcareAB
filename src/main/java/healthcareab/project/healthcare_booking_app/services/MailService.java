@@ -1,10 +1,8 @@
 package healthcareab.project.healthcare_booking_app.services;
 
-import healthcareab.project.healthcare_booking_app.models.enums.EmailVerificationToken;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
-
 
 @Service
 public class MailService {

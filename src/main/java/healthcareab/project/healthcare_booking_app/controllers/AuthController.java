@@ -5,9 +5,12 @@ import healthcareab.project.healthcare_booking_app.dto.AuthResponse;
 import healthcareab.project.healthcare_booking_app.dto.PatientRegisterRequest;
 import healthcareab.project.healthcare_booking_app.dto.RegisterResponse;
 import healthcareab.project.healthcare_booking_app.models.Patient;
+import healthcareab.project.healthcare_booking_app.models.enums.EmailVerificationToken;
 import healthcareab.project.healthcare_booking_app.models.enums.Role;
+import healthcareab.project.healthcare_booking_app.repository.EmailVerificationTokenRepository;
 import healthcareab.project.healthcare_booking_app.repository.PatientRepository;
 import healthcareab.project.healthcare_booking_app.services.AuthService;
+import healthcareab.project.healthcare_booking_app.services.MailService;
 import healthcareab.project.healthcare_booking_app.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +31,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -36,15 +42,21 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final AuthService authService;
     private final PatientRepository patientRepository;
+    private final MailService mailService;
+    private final EmailVerificationTokenRepository emailVerificationTokenRepository;
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtUtil jwtUtil,
                           AuthService authService,
-                          PatientRepository patientRepository) {
+                          PatientRepository patientRepository,
+                          MailService mailService,
+                          EmailVerificationTokenRepository emailVerificationTokenRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.authService = authService;
         this.patientRepository = patientRepository;
+        this.mailService = mailService;
+        this.emailVerificationTokenRepository = emailVerificationTokenRepository;
     }
 
     // =========================
@@ -74,8 +86,31 @@ public class AuthController {
         patient.setPersonalIdentityNumber(req.getPersonalIdentityNumber());
 
         patient.setRole(Role.USER);
+        patient.setEnabled(false);
 
-        authService.registerPatient(patient);
+        Patient saved = authService.registerPatient(patient);
+
+        // create token
+        String token = UUID.randomUUID().toString().replace("-", "");
+        EmailVerificationToken emailVerificationToken = new EmailVerificationToken();
+        emailVerificationToken.setToken(token);
+        emailVerificationToken.setUser(saved);
+        emailVerificationToken.setExpiresAt(LocalDateTime.now().plusHours(24));
+        emailVerificationTokenRepository.save(emailVerificationToken);
+
+        //send email
+        String link = "http://localhost:8080/auth/verify?token=" + token;
+        mailService.sendVerificationEmail(saved.getUsername(), link);
+
+        RegisterResponse response = new RegisterResponse(
+                "Registered successfully. Please verify your email.",
+                saved.getUsername(),
+                saved.getRole()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+       /* authService.registerPatient(patient);
 
         RegisterResponse response = new RegisterResponse(
                 "Patient registered successfully",
@@ -84,7 +119,7 @@ public class AuthController {
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+    }*/
 
     // =========================
     // LOGIN

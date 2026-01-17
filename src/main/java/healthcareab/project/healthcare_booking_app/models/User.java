@@ -67,12 +67,11 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, Role role,
-               boolean enabled) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.enabled = false;
+        this.enabled = false; // default: must verify email
     }
 
     public Long getId() {
