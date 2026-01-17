@@ -36,7 +36,7 @@ public class User {
     @Column(nullable = false)
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})"
             + ".*$", message = "Password must be at least 8 characters long and contain at least "
-                    + "one uppercase letter, one number, and one special character")
+            + "one uppercase letter, one number, and one special character")
     private String password;
 
     @Column(nullable = false)
@@ -83,13 +83,13 @@ public class User {
 
     public @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})"
             + ".*$", message = "Password must be at least 8 characters long and contain at least "
-                    + "one uppercase letter, one number, and one special character") String getPassword() {
+            + "one uppercase letter, one number, and one special character") String getPassword() {
         return password;
     }
 
     public void setPassword(@Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})"
             + ".*$", message = "Password must be at least 8 characters long and contain at least "
-                    + "one uppercase letter, one number, and one special character") String password) {
+            + "one uppercase letter, one number, and one special character") String password) {
         this.password = password;
     }
 
@@ -137,4 +137,10 @@ public class User {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public void setId(Long userId) {
+        this.id = userId;
+    }
 }
+
+

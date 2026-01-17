@@ -65,4 +65,6 @@ public class CaregiverResponse {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
 }
+
