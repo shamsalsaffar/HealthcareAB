@@ -45,20 +45,21 @@ class BookingServiceTest {
 
     @Test
     void createBooking_shouldSaveBooking() {
-        Booking booking = new Booking();
+        Booking booking = validBooking();
+
         Mockito.when(bookingRepository.save(booking)).thenReturn(booking);
 
-        Booking saved = bookingService.createBooking(booking);
+        Booking savedBooking = bookingService.createBooking(booking);
 
         Mockito.verify(bookingRepository).save(booking);
-        assertThat(saved).isEqualTo(booking);
+        assertThat(savedBooking).isEqualTo(booking);
     }
 
     @Test
     void validateBooking_shouldReturnEmptyErrors_whenBookingIsValid() {
         Booking booking = validBooking();
 
-        var errors = bookingService.validateBooking(booking);
+        List<String> errors = bookingService.validateBooking(booking);
 
         assertThat(errors.isEmpty());
     }
@@ -90,7 +91,7 @@ class BookingServiceTest {
         assertIterableEquals(expected, errors);
     }
 
-
+    //Help function to easy get a valid booking
     private Booking validBooking() {
         Booking booking = new Booking();
         booking.setPatient(patient);
@@ -100,5 +101,6 @@ class BookingServiceTest {
         booking.setStatus(BookingStatus.ACTIVE);
         return booking;
     }
+
 
 }

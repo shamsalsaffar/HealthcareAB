@@ -3,10 +3,7 @@ package healthcareab.project.healthcare_booking_app.controllers;
 import healthcareab.project.healthcare_booking_app.models.Booking;
 import healthcareab.project.healthcare_booking_app.services.BookingService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -36,4 +33,17 @@ public class BookingController {
 
         return ResponseEntity.ok("Booking successful");
     }
+
+    @GetMapping("/booking")
+    public Booking getBookingById(@RequestParam Long id){
+
+        return bookingService.findBookingById(id);
+    }
+
+    @DeleteMapping("/booking")
+    public ResponseEntity deleteBookingById(@RequestParam Long id){
+
+        return bookingService.deleteBookingById(id);
+    }
+
 }

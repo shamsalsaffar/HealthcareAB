@@ -1,11 +1,10 @@
 package healthcareab.project.healthcare_booking_app.services;
 
+import healthcareab.project.healthcare_booking_app.exception.ResourceNotFoundException;
 import healthcareab.project.healthcare_booking_app.models.Booking;
-import healthcareab.project.healthcare_booking_app.models.Caregiver;
-import healthcareab.project.healthcare_booking_app.models.Patient;
 import healthcareab.project.healthcare_booking_app.repository.BookingRepository;
 import healthcareab.project.healthcare_booking_app.repository.UserRepository;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,19 +23,22 @@ public class BookingService {
 
     public Booking createBooking(Booking booking) {
 
-        // Validate that the patient exists
-        userRepository.findById(booking.getPatient().getId())
-                .filter(Patient.class::isInstance)
-                .map(Patient.class::cast)
-                .orElseThrow(() -> new ResourceNotFoundException ("Patient not found"));
-
-        //Validate that the caregiver exists
-        userRepository.findById(booking.getCaregiver().getId())
-                .filter(Caregiver.class::isInstance)
-                .map(Caregiver.class::cast)
-                .orElseThrow(() -> new ResourceNotFoundException("Caregiver not found"));
-
         return bookingRepository.save(booking);
+    }
+
+    public Booking findBookingById(long id) {
+        return bookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+    }
+
+    public ResponseEntity deleteBookingById(long id) {
+        //validate that the booking exists before trying to delete it
+        bookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+        bookingRepository.deleteById(id);
+
+        return ResponseEntity.ok("Booking deleted");
     }
 
     public List<String> validateBooking(Booking booking) {
