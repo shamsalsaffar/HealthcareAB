@@ -3,31 +3,40 @@ package healthcareab.project.healthcare_booking_app.dto;
 import healthcareab.project.healthcare_booking_app.models.enums.Role;
 
 public class AuthResponse {
-    private String message;
+
     private String jwtToken;
     private String username;
     private Role role;
+
     private String email;
     private String firstName;
     private String lastName;
 
-    public AuthResponse(String jwtToken, String username, Role role, String email, String firstName, String lastName,
-            String message) {
-        this.message = message;
+    private String phoneNumber;
+    private String address;
+
+    private String message;
+
+    public AuthResponse() {
+    }
+
+    public AuthResponse(String jwtToken,
+                        String username,
+                        Role role,
+                        String email,
+                        String firstName,
+                        String lastName,
+                        String phoneNumber,
+                        String address,
+                        String message) {
         this.jwtToken = jwtToken;
         this.username = username;
         this.role = role;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
+        this.phoneNumber = phoneNumber;
+        this.address = address;
         this.message = message;
     }
 
@@ -79,4 +88,27 @@ public class AuthResponse {
         this.lastName = lastName;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String adress) {
+        this.address = adress;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

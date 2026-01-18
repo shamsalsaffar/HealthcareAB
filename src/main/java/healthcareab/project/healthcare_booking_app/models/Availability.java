@@ -1,12 +1,13 @@
 package healthcareab.project.healthcare_booking_app.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -19,9 +20,10 @@ public class Availability {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Caregiver id is required")
-    @Column(name = "caregiver_id", nullable = false)
-    private Long caregiverId;
+    @NotNull(message = "Caregiver is required")
+    @ManyToOne
+    @JoinColumn(name = "caregiver_id", nullable = false)
+    private Caregiver caregiver;
 
     @NotNull(message = "Start time is required")
     @Column(name = "start_time", nullable = false)
@@ -40,8 +42,13 @@ public class Availability {
     public Availability() {
     }
 
-    public Availability(Long caregiverId, LocalDate startTime, LocalDate endTime, boolean reoccurring) {
-        this.caregiverId = caregiverId;
+    public Availability(
+            Caregiver caregiver,
+            LocalDate startTime,
+            LocalDate endTime,
+            boolean reoccurring
+    ) {
+        this.caregiver = caregiver;
         this.startTime = startTime;
         this.endTime = endTime;
         this.reoccurring = reoccurring;
@@ -52,12 +59,12 @@ public class Availability {
         return id;
     }
 
-    public Long getCaregiverId() {
-        return caregiverId;
+    public Caregiver getCaregiver() {
+        return caregiver;
     }
 
-    public void setCaregiverId(Long caregiverId) {
-        this.caregiverId = caregiverId;
+    public void setCaregiver(Caregiver caregiver) {
+        this.caregiver = caregiver;
     }
 
     public LocalDate getStartTime() {
