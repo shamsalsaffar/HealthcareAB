@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class BookingController {
 
-    private BookingService bookingService;
+    private final BookingService bookingService;
+
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     @PostMapping("/booking")
     public Booking createBooking(@RequestBody Booking booking){
