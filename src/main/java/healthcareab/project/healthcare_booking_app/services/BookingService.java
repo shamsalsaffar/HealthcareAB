@@ -25,10 +25,10 @@ public class BookingService {
 
         List<String> errors = new ArrayList<>();
 
-        if (booking.getPatient() == null) {
+        if (booking.getPatient() == null || booking.getPatient().getId() == null) {
             errors.add("Field patient is missing");
         }
-        if (booking.getCaregiver() == null) {
+        if (booking.getCaregiver() == null || booking.getCaregiver().getId() == null) {
             errors.add("Field caregiver is missing");
         }
         if (booking.getBookingStartTime() == null) {
