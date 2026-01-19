@@ -50,12 +50,9 @@ public class AuthController {
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final UserRepository userRepository;
 
-    public AuthController(AuthenticationManager authenticationManager,
-                          JwtUtil jwtUtil,
-                          AuthService authService,
-                          PatientRepository patientRepository,
-                          MailService mailService,
-                          EmailVerificationTokenRepository emailVerificationTokenRepository, UserRepository userRepository) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, AuthService authService,
+            PatientRepository patientRepository, MailService mailService,
+            EmailVerificationTokenRepository emailVerificationTokenRepository, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.authService = authService;
@@ -107,41 +104,33 @@ public class AuthController {
 
         emailVerificationTokenRepository.save(emailVerificationToken);
 
-        //send email
+        // send email
         String link = "http://localhost:8080/auth/verify?token=" + token;
         mailService.sendVerificationEmail(saved.getUsername(), link);
 
-        RegisterResponse response = new RegisterResponse(
-                "Registered successfully. Please verify your email.",
-                saved.getUsername(),
-                saved.getRole()
-        );
+        RegisterResponse response = new RegisterResponse("Registered successfully. Please verify your email.",
+                saved.getUsername(), saved.getRole());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-       /* authService.registerPatient(patient);
-
-        RegisterResponse response = new RegisterResponse(
-                "Patient registered successfully",
-                patient.getUsername(),
-                patient.getRole()
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }*/
+    /*
+     * authService.registerPatient(patient); RegisterResponse response = new RegisterResponse(
+     * "Patient registered successfully", patient.getUsername(), patient.getRole() ); return
+     * ResponseEntity.status(HttpStatus.CREATED).body(response); }
+     */
 
     // =========================
     // VERIFY
     // =========================
     @GetMapping("/verify")
     public ResponseEntity<?> verifyEmail(@RequestParam String token) {
-        EmailVerificationToken emailVerificationToken= emailVerificationTokenRepository.findByToken(token)
+        EmailVerificationToken emailVerificationToken = emailVerificationTokenRepository.findByToken(token)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token"));
         if (emailVerificationToken.isUsed()) {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token already used.");
         }
-        if (emailVerificationToken.isExpired()){
+        if (emailVerificationToken.isExpired()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token has expired.");
         }
         User user = emailVerificationToken.getUser();
@@ -152,13 +141,8 @@ public class AuthController {
         emailVerificationToken.setUsedAt(LocalDateTime.now());
         emailVerificationTokenRepository.save(emailVerificationToken);
 
-
-
-        return ResponseEntity.ok(new RegisterResponse(
-                " Email verified successfully!+ \n + ",
-                user.getUsername(),
-                user.getRole()
-        ));
+        return ResponseEntity
+                .ok(new RegisterResponse(" Email verified successfully!+ \n + ", user.getUsername(), user.getRole()));
 
     }
 
@@ -170,8 +154,7 @@ public class AuthController {
 
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -179,34 +162,22 @@ public class AuthController {
 
             String jwt = jwtUtil.generateToken(userDetails);
 
-            ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt)
-                    .httpOnly(true)
-                    .secure(false) // IMPORTANT: true in production (HTTPS)
-                    .path("/")
-                    .maxAge(10 * 60 * 60)
-                    .sameSite("Lax")
-                    .build();
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt).httpOnly(true).secure(false) // IMPORTANT: true
+                                                                                                    // in production
+                                                                                                    // (HTTPS)
+                    .path("/").maxAge(10 * 60 * 60).sameSite("Lax").build();
 
             // Fetch patient to include patient fields
             Patient patient = patientRepository.findByUsername(userDetails.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("Patient not found"));
 
             // NOTE: do NOT return personalIdentityNumber (sensitive)
-            AuthResponse authResponse = new AuthResponse(
-                    jwt,
-                    patient.getUsername(),
-                    patient.getRole(),
-                    patient.getUsername(),   // email
-                    patient.getFirstName(),
-                    patient.getLastName(),
-                    patient.getPhoneNumber(),
-                    patient.getAddress(),
-                    "Login successful"
-            );
+            AuthResponse authResponse = new AuthResponse(jwt, patient.getUsername(), patient.getRole(),
+                    patient.getUsername(), // email
+                    patient.getFirstName(), patient.getLastName(), patient.getPhoneNumber(), patient.getAddress(),
+                    "Login successful");
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                    .body(authResponse);
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(authResponse);
 
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
@@ -218,19 +189,13 @@ public class AuthController {
     // =========================
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
-        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "")
-                .httpOnly(true)
-                .secure(false) // IMPORTANT: true in production (HTTPS)
-                .path("/")
-                .maxAge(0)
-                .sameSite("Strict")
-                .build();
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "").httpOnly(true).secure(false) // IMPORTANT: true in
+                                                                                               // production (HTTPS)
+                .path("/").maxAge(0).sameSite("Strict").build();
 
         SecurityContextHolder.clearContext();
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body("Logout successful!");
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body("Logout successful!");
     }
 
     // =========================
@@ -240,8 +205,7 @@ public class AuthController {
     public ResponseEntity<?> checkAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null
-                || !authentication.isAuthenticated()
+        if (authentication == null || !authentication.isAuthenticated()
                 || authentication instanceof AnonymousAuthenticationToken) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated!");
         }
@@ -252,17 +216,10 @@ public class AuthController {
         Patient patient = patientRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Patient not found"));
 
-        AuthResponse response = new AuthResponse(
-                null, // since token is in cookie, you can keep this null (or remove jwt from response)
-                patient.getUsername(),
-                patient.getRole(),
-                patient.getUsername(),
-                patient.getFirstName(),
-                patient.getLastName(),
-                patient.getPhoneNumber(),
-                patient.getAddress(),
-                "Authenticated"
-        );
+        AuthResponse response = new AuthResponse(null, // since token is in cookie, you can keep this null (or remove
+                                                       // jwt from response)
+                patient.getUsername(), patient.getRole(), patient.getUsername(), patient.getFirstName(),
+                patient.getLastName(), patient.getPhoneNumber(), patient.getAddress(), "Authenticated");
 
         return ResponseEntity.ok(response);
     }

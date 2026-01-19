@@ -37,10 +37,8 @@ class AuthControllerVerifyTest {
         EmailVerificationTokenRepository tokenRepo = Mockito.mock(EmailVerificationTokenRepository.class);
         UserRepository userRepository = Mockito.mock(UserRepository.class);
 
-        AuthController controller = new AuthController(
-                authenticationManager, jwtUtil, authService, patientRepository,
-                mailService, tokenRepo, userRepository
-        );
+        AuthController controller = new AuthController(authenticationManager, jwtUtil, authService, patientRepository,
+                mailService, tokenRepo, userRepository);
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
@@ -57,8 +55,7 @@ class AuthControllerVerifyTest {
 
         Mockito.when(tokenRepo.findByToken("abc123")).thenReturn(Optional.of(token));
 
-        mockMvc.perform(get("/auth/verify").param("token", "abc123"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/auth/verify").param("token", "abc123")).andExpect(status().isOk());
 
         verify(userRepository, times(1)).save(any(User.class));
         verify(tokenRepo, times(1)).save(any(EmailVerificationToken.class));

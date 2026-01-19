@@ -17,10 +17,9 @@ public class UserService {
     private final CaregiverRepository caregiverRepository;
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
 
-    public UserService(UserRepository userRepository,
-                       PatientRepository patientRepository,
-                       CaregiverRepository caregiverRepository,
-                       EmailVerificationTokenRepository emailVerificationTokenRepository) {
+    public UserService(UserRepository userRepository, PatientRepository patientRepository,
+            CaregiverRepository caregiverRepository,
+            EmailVerificationTokenRepository emailVerificationTokenRepository) {
         this.userRepository = userRepository;
         this.patientRepository = patientRepository;
         this.caregiverRepository = caregiverRepository;
@@ -34,8 +33,7 @@ public class UserService {
         }
 
         // 1) delete token first (FK safe)
-        emailVerificationTokenRepository.findByUserId(userId)
-                .ifPresent(emailVerificationTokenRepository::delete);
+        emailVerificationTokenRepository.findByUserId(userId).ifPresent(emailVerificationTokenRepository::delete);
 
         // 2) delete child row if exists (safe fallback)
         if (patientRepository.existsById(userId)) {

@@ -30,31 +30,29 @@ class CustomUserDetailsServiceTest {
     @Test
     void loadUserByUsername_shouldReturnUserDetails_withRoleAuthority() {
         // arrange
-        User user = new User();                 // Skapa test-user
-        user.setUsername("test@test.com");      // Username
-        user.setPassword("ENC_PASS");           // Encoded password (som det skulle vara i DB)
-        user.setRole(Role.USER);                // Roll
+        User user = new User(); // Skapa test-user
+        user.setUsername("test@test.com"); // Username
+        user.setPassword("ENC_PASS"); // Encoded password (som det skulle vara i DB)
+        user.setRole(Role.USER); // Roll
 
-        when(userRepository.findByUsername("test@test.com"))
-                .thenReturn(Optional.of(user)); // När repo letar, returnera user
+        when(userRepository.findByUsername("test@test.com")).thenReturn(Optional.of(user)); // När repo letar, returnera
+                                                                                            // user
 
         // act
         UserDetails details = customUserDetailsService.loadUserByUsername("test@test.com");
 
         // assert
         assertEquals("test@test.com", details.getUsername()); // username matchar
-        assertEquals("ENC_PASS", details.getPassword());      // password matchar
+        assertEquals("ENC_PASS", details.getPassword()); // password matchar
 
         // Kontrollera authority: ska bli "ROLE_USER"
-        assertTrue(details.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
+        assertTrue(details.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
     }
 
     @Test
     void loadUserByUsername_shouldThrow_whenUserNotFound() {
         // arrange
-        when(userRepository.findByUsername("missing@test.com"))
-                .thenReturn(Optional.empty()); // Repo hittar ingen user
+        when(userRepository.findByUsername("missing@test.com")).thenReturn(Optional.empty()); // Repo hittar ingen user
 
         // act + assert
         assertThrows(UsernameNotFoundException.class,

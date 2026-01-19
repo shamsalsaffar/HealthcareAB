@@ -41,10 +41,10 @@ public class AvailabilityServiceTest {
     @InjectMocks
     AvailabilityService availabilityService;
 
-    //TODO Happy cases
+    // TODO Happy cases
     @Test
     void whenCreateAvailability_shouldReturnSuccess() {
-        //Arrange
+        // Arrange
         AvailabilityRequest request = validRequest();
         Availability save = new Availability();
         save.setCaregiver(caregiver);
@@ -53,10 +53,10 @@ public class AvailabilityServiceTest {
 
         when(availabilityRepository.save(any(Availability.class))).thenReturn(save);
 
-        //Act
+        // Act
         AvailabilityResponse response = availabilityService.createAvailability(request);
 
-        //Assert
+        // Assert
         assertThat(response.getCaregiverId()).isEqualTo(1L);
     }
 
@@ -76,115 +76,105 @@ public class AvailabilityServiceTest {
 
     @Test
     void whenGetAllAvailability_shouldReturnSuccess() {
-        //Arrange
+        // Arrange
         Availability a1 = availabilityEntity();
         Availability a2 = availabilityEntity();
 
         when(availabilityRepository.findAll()).thenReturn(List.of(a1, a2));
         when(caregiver.getId()).thenReturn(1L);
 
-        //Act
-        List<AvailabilityResponse> result =
-                availabilityService.getAllAvailabilities();
+        // Act
+        List<AvailabilityResponse> result = availabilityService.getAllAvailabilities();
 
-        //Assert
+        // Assert
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getCaregiverId()).isEqualTo(1L);
     }
 
     @Test
     void whenUpdateAvailability_shouldReturnSuccess() {
-        //Arrange
+        // Arrange
         AvailabilityUpdateRequest updateRequest = new AvailabilityUpdateRequest();
         updateRequest.setReoccurring(true);
 
         Availability existing = availabilityEntity();
 
-        when(availabilityRepository.findById(10L))
-                .thenReturn(Optional.of(existing));
+        when(availabilityRepository.findById(10L)).thenReturn(Optional.of(existing));
         when(availabilityRepository.save(any(Availability.class))).thenReturn(existing);
 
-        //Act
-        AvailabilityResponse response =
-                availabilityService.updateAvailability(updateRequest, 10L);
+        // Act
+        AvailabilityResponse response = availabilityService.updateAvailability(updateRequest, 10L);
 
-        //Assert
+        // Assert
         assertThat(response.isReoccurring()).isTrue();
     }
 
     @Test
     void whenDeleteAvailability_shouldReturnSuccess() {
-        //Arrange
+        // Arrange
         when(availabilityRepository.existsById(10L)).thenReturn(true);
 
-        //Act
+        // Act
         availabilityService.deleteAvailability(10L);
 
-        //Assert
+        // Assert
         verify(availabilityRepository).deleteById(10L);
     }
 
-    //TODO Unhappy cases
+    // TODO Unhappy cases
     @Test
     void whenCreateAvailability_shouldReturnCaregiverNotFound() {
-        //Arrange
+        // Arrange
         AvailabilityRequest request = validRequest();
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        //Act & Assert
-        assertThrows(ResourceNotFoundException.class,
-                () -> availabilityService.createAvailability(request));
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> availabilityService.createAvailability(request));
     }
 
     @Test
     void whenCreateAvailability_shouldThrowIfUserIsNotCaregiver() {
-        //Arrange
+        // Arrange
         AvailabilityRequest request = validRequest();
 
-        //Mock a user that's not a Caregiver
+        // Mock a user that's not a Caregiver
         User normalUser = mock(User.class);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(normalUser));
 
-        //Act & Assert
-        assertThrows(ResourceNotFoundException.class,
-                () -> availabilityService.createAvailability(request));
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> availabilityService.createAvailability(request));
     }
 
     @Test
     void whenGetAvailabilityById_shouldThrowAvailabilityNotFound() {
-        //Arrange
+        // Arrange
         when(availabilityRepository.findById(10L)).thenReturn(Optional.empty());
 
-        //Act & Assert
-        assertThrows(ResourceNotFoundException.class,
-                () -> availabilityService.getAvailabilityById(10L));
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> availabilityService.getAvailabilityById(10L));
     }
 
     @Test
     void whenUpdateAvailability_shouldThrowNotFound() {
-        //Arrange
+        // Arrange
         AvailabilityUpdateRequest updateRequest = new AvailabilityUpdateRequest();
         when(availabilityRepository.findById(10L)).thenReturn(Optional.empty());
 
-        //Act & Assert
-        assertThrows(
-                ResourceNotFoundException.class,
-                () -> availabilityService.updateAvailability(updateRequest, 10L));
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> availabilityService.updateAvailability(updateRequest, 10L));
     }
 
     @Test
     void whenDeleteAvailability_shouldThrowNotFound() {
-        //Arrange
+        // Arrange
         when(availabilityRepository.existsById(10L)).thenReturn(false);
 
-        //Act & Assert
-        assertThrows(
-                ResourceNotFoundException.class,
-                () -> availabilityService.deleteAvailability(10L));
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> availabilityService.deleteAvailability(10L));
     }
 
-    //help method so the same code don't need to be repeated
+    // help method so the same code don't need to be repeated
     private AvailabilityRequest validRequest() {
         AvailabilityRequest availability = new AvailabilityRequest();
         availability.setCaregiverId(1L);

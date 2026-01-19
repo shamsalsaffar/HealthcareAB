@@ -15,4 +15,3 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     boolean existsByPersonalIdentityNumber(String pin);
 }
-

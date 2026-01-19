@@ -42,12 +42,7 @@ public class Availability {
     public Availability() {
     }
 
-    public Availability(
-            Caregiver caregiver,
-            LocalDate startTime,
-            LocalDate endTime,
-            boolean reoccurring
-    ) {
+    public Availability(Caregiver caregiver, LocalDate startTime, LocalDate endTime, boolean reoccurring) {
         this.caregiver = caregiver;
         this.startTime = startTime;
         this.endTime = endTime;

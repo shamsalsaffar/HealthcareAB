@@ -20,15 +20,8 @@ public class AuthResponse {
     public AuthResponse() {
     }
 
-    public AuthResponse(String jwtToken,
-                        String username,
-                        Role role,
-                        String email,
-                        String firstName,
-                        String lastName,
-                        String phoneNumber,
-                        String address,
-                        String message) {
+    public AuthResponse(String jwtToken, String username, Role role, String email, String firstName, String lastName,
+            String phoneNumber, String address, String message) {
         this.jwtToken = jwtToken;
         this.username = username;
         this.role = role;

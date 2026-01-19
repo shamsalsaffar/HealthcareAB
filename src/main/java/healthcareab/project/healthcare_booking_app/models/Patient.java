@@ -18,18 +18,17 @@ public class Patient extends User {
     private String address;
 
     @NotNull(message = "Phone number cannot be empty")
-    @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$",
-            message = "Invalid Swedish mobile phone number")
+    @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$", message = "Invalid Swedish mobile phone number")
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
     @NotNull(message = "Personal identity number cannot be empty")
-    @Pattern(regexp = "^(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{4}$",
-            message = "Invalid personal identity number (YYYYMMDDXXXX)")
+    @Pattern(regexp = "^(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{4}$", message = "Invalid personal identity number (YYYYMMDDXXXX)")
     @Column(name = "personal_identity_number", unique = true, nullable = false)
     private String personalIdentityNumber;
 
-    public Patient() {}
+    public Patient() {
+    }
 
     public Patient(String address, String phoneNumber, String personalIdentityNumber) {
         this.address = address;
@@ -37,8 +36,8 @@ public class Patient extends User {
         this.personalIdentityNumber = personalIdentityNumber;
     }
 
-    public Patient(String username, String password, Role role,
-                   String address, String phoneNumber, String personalIdentityNumber) {
+    public Patient(String username, String password, Role role, String address, String phoneNumber,
+            String personalIdentityNumber) {
         super(username, password, role);
         this.address = address;
         this.phoneNumber = phoneNumber;
