@@ -11,14 +11,8 @@ public class AvailabilityResponse {
     private Long caregiverId;
     private LocalDate createdAt;
 
-    public AvailabilityResponse(
-            Long id,
-            LocalDate startTime,
-            LocalDate endTime,
-            boolean reoccurring,
-            Long caregiverId,
-            LocalDate createdAt
-    ) {
+    public AvailabilityResponse(Long id, LocalDate startTime, LocalDate endTime, boolean reoccurring, Long caregiverId,
+            LocalDate createdAt) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
