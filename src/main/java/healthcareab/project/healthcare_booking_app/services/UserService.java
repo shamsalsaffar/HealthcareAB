@@ -68,6 +68,9 @@ public class UserService {
             if (dto.getAddress() != null) {
                 patient.setAddress(dto.getAddress());
             }
+            if (dto.getPersonalIdentityNumber() != null) {
+                patient.setPersonalIdentityNumber(dto.getPersonalIdentityNumber());
+            }
         }
         //update caregiver specific fields
         else if (user instanceof Caregiver caregiver) {

@@ -21,8 +21,8 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateUser(
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> patchUser(
             @PathVariable Long id,
             @RequestBody UpdateUserRequest request) {
 
