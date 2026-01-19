@@ -1,5 +1,6 @@
 package healthcareab.project.healthcare_booking_app.controllers;
 
+import healthcareab.project.healthcare_booking_app.dto.BookingResponse;
 import healthcareab.project.healthcare_booking_app.models.Booking;
 import healthcareab.project.healthcare_booking_app.services.BookingService;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class BookingController {
     }
 
     @GetMapping("/booking")
-    public Booking getBookingById(@RequestParam Long id){
+    public BookingResponse getBookingById(@RequestParam Long id){
 
         return bookingService.findBookingById(id);
     }

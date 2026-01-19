@@ -1,5 +1,6 @@
 package healthcareab.project.healthcare_booking_app.services;
 
+import healthcareab.project.healthcare_booking_app.dto.BookingResponse;
 import healthcareab.project.healthcare_booking_app.exception.ResourceNotFoundException;
 import healthcareab.project.healthcare_booking_app.models.Booking;
 import healthcareab.project.healthcare_booking_app.repository.BookingRepository;
@@ -26,9 +27,11 @@ public class BookingService {
         return bookingRepository.save(booking);
     }
 
-    public Booking findBookingById(long id) {
-        return bookingRepository.findById(id)
+    public BookingResponse findBookingById(long id) {
+        Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+        return new BookingResponse(booking.getId(), booking.getPatient().getFirstName(), booking.getCaregiver().getFirstName(), booking.getBookingStartTime(), booking.getBookingEndTime(), booking.getCreatedAt());
     }
 
     public ResponseEntity deleteBookingById(long id) {
