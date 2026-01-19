@@ -56,6 +56,10 @@ public class SecurityConfig {
 
                                 // any other requests the user need to be logged
                                 .anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/caregiver/find-by-user-id").permitAll()
+                        .requestMatchers("/api/availabilities/**").permitAll().requestMatchers("/api/booking")
+                        .permitAll().anyRequest().authenticated())
 
                 // disable session due to jwt statelessness
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

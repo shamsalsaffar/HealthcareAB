@@ -1,7 +1,7 @@
 package healthcareab.project.healthcare_booking_app.services;
 
 import healthcareab.project.healthcare_booking_app.dto.BookingResponse;
-import healthcareab.project.healthcare_booking_app.exception.ResourceNotFoundException;
+import healthcareab.project.healthcare_booking_app.exceptions.ResourceNotFoundException;
 import healthcareab.project.healthcare_booking_app.models.Booking;
 import healthcareab.project.healthcare_booking_app.repository.BookingRepository;
 import healthcareab.project.healthcare_booking_app.repository.UserRepository;
