@@ -1,11 +1,9 @@
 package healthcareab.project.healthcare_booking_app.controllers;
 
+import healthcareab.project.healthcare_booking_app.dto.UpdateUserRequest;
 import healthcareab.project.healthcare_booking_app.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -20,6 +18,15 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateUser(
+            @PathVariable Long id,
+            @RequestBody UpdateUserRequest request) {
+
+        userService.updateUser(id, request);
         return ResponseEntity.noContent().build();
     }
 }
