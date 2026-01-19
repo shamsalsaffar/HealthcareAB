@@ -28,13 +28,11 @@ public class AvailabilityController {
         this.availabilityService = availabilityService;
     }
 
-    //TODO at the moment it doesnt check auth. fix for later issue.
-//    @PreAuthorize("hasRole('CAREGIVER')")
+    // TODO at the moment it doesnt check auth. fix for later issue.
+    // @PreAuthorize("hasRole('CAREGIVER')")
     @PostMapping
-    public ResponseEntity<AvailabilityResponse> createAvailability(
-            @Valid @RequestBody AvailabilityRequest dtoRequest) {
-        AvailabilityResponse dtoResponse = availabilityService
-                .createAvailability(dtoRequest);
+    public ResponseEntity<AvailabilityResponse> createAvailability(@Valid @RequestBody AvailabilityRequest dtoRequest) {
+        AvailabilityResponse dtoResponse = availabilityService.createAvailability(dtoRequest);
         return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
     }
 
@@ -51,11 +49,9 @@ public class AvailabilityController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AvailabilityResponse> updateAvailability(
-            @PathVariable Long id,
+    public ResponseEntity<AvailabilityResponse> updateAvailability(@PathVariable Long id,
             @Valid @RequestBody AvailabilityUpdateRequest dtoUpdate) {
-        return ResponseEntity.ok(availabilityService.updateAvailability(dtoUpdate, id)
-        );
+        return ResponseEntity.ok(availabilityService.updateAvailability(dtoUpdate, id));
     }
 
     @DeleteMapping("/{id}")
