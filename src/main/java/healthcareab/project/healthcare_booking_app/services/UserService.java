@@ -62,8 +62,12 @@ public class UserService {
 
         //update patient specific fields
         if (user instanceof Patient patient) {
-            patient.setPhoneNumber(dto.getPhoneNumber());
-            patient.setAddress(dto.getAddress());
+            if (dto.getPhoneNumber() != null) {
+                patient.setPhoneNumber(dto.getPhoneNumber());
+            }
+            if (dto.getAddress() != null) {
+                patient.setAddress(dto.getAddress());
+            }
         }
         //update caregiver specific fields
         else if (user instanceof Caregiver caregiver) {
