@@ -60,20 +60,40 @@ public class Booking {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public Patient getPatient() {
         return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public Caregiver getCaregiver() {
         return caregiver;
     }
 
+    public void setCaregiver(Caregiver caregiver) {
+        this.caregiver = caregiver;
+    }
+
     public LocalDateTime getBookingStartTime() {
         return bookingStartTime;
     }
 
+    public void setBookingStartTime(LocalDateTime bookingStartTime) {
+        this.bookingStartTime = bookingStartTime;
+    }
+
     public LocalDateTime getBookingEndTime() {
         return bookingEndTime;
+    }
+
+    public void setBookingEndTime(LocalDateTime bookingEndTime) {
+        this.bookingEndTime = bookingEndTime;
     }
 
     public BookingStatus getStatus() {
@@ -86,5 +106,9 @@ public class Booking {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

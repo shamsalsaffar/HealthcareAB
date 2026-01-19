@@ -3,7 +3,7 @@ package healthcareab.project.healthcare_booking_app.services;
 import healthcareab.project.healthcare_booking_app.dto.AvailabilityRequest;
 import healthcareab.project.healthcare_booking_app.dto.AvailabilityResponse;
 import healthcareab.project.healthcare_booking_app.dto.AvailabilityUpdateRequest;
-import healthcareab.project.healthcare_booking_app.exception.ResourceNotFoundException;
+import healthcareab.project.healthcare_booking_app.exceptions.ResourceNotFoundException;
 import healthcareab.project.healthcare_booking_app.models.Availability;
 import healthcareab.project.healthcare_booking_app.models.Caregiver;
 import healthcareab.project.healthcare_booking_app.repository.AvailabilityRepository;

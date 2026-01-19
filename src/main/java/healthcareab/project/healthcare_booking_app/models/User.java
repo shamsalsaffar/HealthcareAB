@@ -78,6 +78,10 @@ public class User {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public @NotEmpty(message = "Email cannot be empty") @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$", message = "That's not a valid email.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String getUsername() {
         return username;
     }
