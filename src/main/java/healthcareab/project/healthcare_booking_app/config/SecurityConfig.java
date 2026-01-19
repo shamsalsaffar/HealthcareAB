@@ -50,31 +50,31 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 // define URL based rules
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/auth/**").permitAll().requestMatchers("/api/availabilities/**")
-                                .permitAll().requestMatchers("/api/booking").permitAll()
-
-                                // any other requests the user need to be logged
-                                .anyRequest().authenticated())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/availabilities/**").permitAll()
+                        .requestMatchers("/api/booking").permitAll()
                         .requestMatchers("/caregiver/find-by-user-id").permitAll()
-                        .requestMatchers("/api/availabilities/**").permitAll().requestMatchers("/api/booking")
-                        .permitAll().anyRequest().authenticated())
+                        .anyRequest().authenticated()
+                )
 
                 // disable session due to jwt statelessness
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // Exception handler för securty 401 , 403
-                .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.setContentType("application/json");
-                    response.getWriter().write("{\"status\":401,\"message\":\"Unauthorized\"}");
-                }).accessDeniedHandler((request, response, accessDeniedException) -> {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.setContentType("application/json");
-                    response.getWriter().write("{\"status\":403,\"message\":\"Forbidden\"}");
+                // exception handling for 401 , 403
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"status\":401,\"message\":\"Unauthorized\"}");
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"status\":403,\"message\":\"Forbidden\"}");
+                        })
+                )
 
-                }))
                 // add jwt filter before standard filter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -88,12 +88,12 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "Origin", // Utan
-                                                                                                           // Origin kan
-                                                                                                           // CORS
-                                                                                                           // ibland bli
-                                                                                                           // konstigt
-                                                                                                           // vid
-                                                                                                           // preflight
+                // Origin kan
+                // CORS
+                // ibland bli
+                // konstigt
+                // vid
+                // preflight
                 "Cookie"));
 
         // headers frontend can READ from the response
