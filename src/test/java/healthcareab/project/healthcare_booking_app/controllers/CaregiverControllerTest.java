@@ -22,18 +22,14 @@ import java.time.LocalDateTime;
 import static healthcareab.project.healthcare_booking_app.models.enums.Specialisation.NEUROLOGY;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(
-        controllers = CaregiverController.class,
-        excludeAutoConfiguration = {SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class},
-        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                SecurityConfig.class,
-                JwtAuthenticationFilter.class
-        })
-)
+@WebMvcTest(controllers = CaregiverController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class,
+        SecurityFilterAutoConfiguration.class }, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                SecurityConfig.class, JwtAuthenticationFilter.class }))
 class CaregiverControllerTest {
-
 
     @Autowired
     private MockMvc mockMvc;
@@ -53,21 +49,16 @@ class CaregiverControllerTest {
         response.setFirstName("Care");
         response.setLastName("Giver");
         response.setSpecialisation(NEUROLOGY);
-        response.setClinic(new Clinic(1L, "Clinic", "Location", "0727654231",
-                LocalDateTime.now(), LocalDateTime.now()));
+        response.setClinic(
+                new Clinic(1L, "Clinic", "Location", "0727654231", LocalDateTime.now(), LocalDateTime.now()));
 
         when(caregiverService.findCaregiverByUserId(userId)).thenReturn(response);
 
-
         // Act + Assert
-        mockMvc.perform(get("/caregiver/find-by-user-id")
-                .param("userId", userId.toString())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.userId").value(1L))
-                .andExpect(jsonPath("$.firstName").value("Care"))
-                .andExpect(jsonPath("$.lastName").value("Giver"))
+        mockMvc.perform(get("/caregiver/find-by-user-id").param("userId", userId.toString())
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$.userId").value(1L))
+                .andExpect(jsonPath("$.firstName").value("Care")).andExpect(jsonPath("$.lastName").value("Giver"))
                 .andExpect(jsonPath("$.firstName").value("Care"))
                 .andExpect(jsonPath("$.specialisation").value(NEUROLOGY.name()))
                 .andExpect(jsonPath("$.clinic.id").value(1));
@@ -76,9 +67,7 @@ class CaregiverControllerTest {
     @Test
     void findCaregiverByUserId_shouldReturnBadRequest_whenUserIdIsEmpty() throws Exception {
         // Act + Assert
-        mockMvc.perform(get("/caregiver/find-by-user-id")
-                        .param("userId", "")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/caregiver/find-by-user-id").param("userId", "").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("userId is required and must be provided"));
     }

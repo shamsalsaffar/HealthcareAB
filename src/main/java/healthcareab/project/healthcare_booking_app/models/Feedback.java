@@ -47,8 +47,8 @@ public class Feedback {
     public Feedback() {
     }
 
-    public Feedback(Patient patient, Booking booking, Clinic clinic,
-                    Integer rating, String comment, Boolean anonymous) {
+    public Feedback(Patient patient, Booking booking, Clinic clinic, Integer rating, String comment,
+            Boolean anonymous) {
 
         this.patient = patient;
         this.booking = booking;

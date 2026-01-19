@@ -52,15 +52,12 @@ class CaregiverServiceTest {
         Caregiver caregiver = new Caregiver();
         caregiver.setId(userId);
 
-        when(userRepository.findById(userId))
-                .thenReturn(Optional.of(user));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        when(caregiverRepository.findById(userId))
-                .thenReturn(Optional.of(caregiver));
+        when(caregiverRepository.findById(userId)).thenReturn(Optional.of(caregiver));
 
         // WHEN
-        CaregiverResponse response =
-                caregiverService.findCaregiverByUserId(userId);
+        CaregiverResponse response = caregiverService.findCaregiverByUserId(userId);
 
         // THEN
         assertNotNull(response);
@@ -77,14 +74,11 @@ class CaregiverServiceTest {
         // GIVEN
         Long userId = 2L;
 
-        when(userRepository.findById(userId))
-                .thenReturn(Optional.empty());
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // WHEN + THEN
-        NoSuchElementException exception = assertThrows(
-                NoSuchElementException.class,
-                () -> caregiverService.findCaregiverByUserId(userId)
-        );
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+                () -> caregiverService.findCaregiverByUserId(userId));
 
         assertEquals("User not found", exception.getMessage());
 
@@ -102,22 +96,15 @@ class CaregiverServiceTest {
         User user = new User();
         user.setId(userId);
 
-        when(userRepository.findById(userId))
-                .thenReturn(Optional.of(user));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        when(caregiverRepository.findById(userId))
-                .thenReturn(Optional.empty());
+        when(caregiverRepository.findById(userId)).thenReturn(Optional.empty());
 
         // WHEN + THEN
-        BadRequestException exception = assertThrows(
-                BadRequestException.class,
-                () -> caregiverService.findCaregiverByUserId(userId)
-        );
+        BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> caregiverService.findCaregiverByUserId(userId));
 
-        assertEquals(
-                "User id does not belong to a caregiver",
-                exception.getMessage()
-        );
+        assertEquals("User id does not belong to a caregiver", exception.getMessage());
 
         verify(userRepository, times(1)).findById(userId);
         verify(caregiverRepository, times(1)).findById(userId);

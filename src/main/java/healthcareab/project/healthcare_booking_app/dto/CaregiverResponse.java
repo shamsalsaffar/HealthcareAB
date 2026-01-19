@@ -15,7 +15,8 @@ public class CaregiverResponse {
 
     private Clinic clinic;
 
-    public CaregiverResponse(Long userId, String firstName, String lastName, Specialisation specialisation, Clinic clinic) {
+    public CaregiverResponse(Long userId, String firstName, String lastName, Specialisation specialisation,
+            Clinic clinic) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -67,4 +68,3 @@ public class CaregiverResponse {
     }
 
 }
-

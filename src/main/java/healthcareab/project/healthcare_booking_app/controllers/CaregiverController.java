@@ -18,12 +18,11 @@ public class CaregiverController {
     public CaregiverController(CaregiverService caregiverService) {
         this.caregiverService = caregiverService;
     }
+
     @GetMapping("/find-by-user-id")
     public ResponseEntity<CaregiverResponse> findCaregiverByUserId(
-            @RequestParam @NotNull(message = "UserId is required") Long userId
-    ) {
-        CaregiverResponse caregiverResponse =
-                caregiverService.findCaregiverByUserId(userId);
+            @RequestParam @NotNull(message = "UserId is required") Long userId) {
+        CaregiverResponse caregiverResponse = caregiverService.findCaregiverByUserId(userId);
 
         return ResponseEntity.ok(caregiverResponse);
     }
