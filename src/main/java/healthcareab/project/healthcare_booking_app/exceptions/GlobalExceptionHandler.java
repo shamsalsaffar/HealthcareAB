@@ -54,29 +54,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDataIntegrity(DataIntegrityViolationException ex) {
         // Pro: don’t leak full DB error details to client
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Data integrity violation.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data integrity violation.");
     }
 
     // 401 - authentication failures
-    @ExceptionHandler({AuthenticationException.class, JwtException.class})
+    @ExceptionHandler({ AuthenticationException.class, JwtException.class })
     public ResponseEntity<String> handleAuthExceptions(Exception ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Unauthorized.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized.");
     }
 
     // 403 - user authenticated but not allowed (role/permission)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDenied(AccessDeniedException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body("Forbidden.");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden.");
     }
 
     // 500 - fallback
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneral(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("An unexpected error occurred.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
     }
 
 

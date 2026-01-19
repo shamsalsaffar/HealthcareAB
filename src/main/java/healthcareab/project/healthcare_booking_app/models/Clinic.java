@@ -35,10 +35,7 @@ public class Clinic {
     private String location;
 
     @NotNull(message = "Phone number of clinic cannot be empty")
-    @Pattern(
-            regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$",
-            message = "Invalid Swedish mobile phone number for the clinic phone number"
-    )
+    @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$", message = "Invalid Swedish mobile phone number for the clinic phone number")
     @Column(unique = true)
     private String phoneNumber;
 
@@ -51,7 +48,8 @@ public class Clinic {
     public Clinic() {
     }
 
-    public Clinic(Long id, String name, String location, String phoneNumber, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Clinic(Long id, String name, String location, String phoneNumber, LocalDateTime createdAt,
+            LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -68,7 +66,8 @@ public class Clinic {
         return name;
     }
 
-    public void setName(@Size(max = 100, message = "Name of clinic should not exceed 100 symbols") @NotNull(message = "Name of clinic is obligatory") @NotEmpty(message = "Name of clinic can not be empty") String name) {
+    public void setName(
+            @Size(max = 100, message = "Name of clinic should not exceed 100 symbols") @NotNull(message = "Name of clinic is obligatory") @NotEmpty(message = "Name of clinic can not be empty") String name) {
         this.name = name;
     }
 
@@ -76,21 +75,17 @@ public class Clinic {
         return location;
     }
 
-    public void setLocation(@Size(max = 100, message = "Location of clinic should not exceed 100 symbols") @NotNull(message = "Location of clinic is obligatory") @NotEmpty(message = "Location of clinic can not be empty") String location) {
+    public void setLocation(
+            @Size(max = 100, message = "Location of clinic should not exceed 100 symbols") @NotNull(message = "Location of clinic is obligatory") @NotEmpty(message = "Location of clinic can not be empty") String location) {
         this.location = location;
     }
 
-    public @NotNull(message = "Phone number cannot be empty") @Pattern(
-            regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$",
-            message = "Invalid Swedish mobile phone number"
-    ) String getPhoneNumber() {
+    public @NotNull(message = "Phone number cannot be empty") @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$", message = "Invalid Swedish mobile phone number") String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(@NotNull(message = "Phone number cannot be empty") @Pattern(
-            regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$",
-            message = "Invalid Swedish mobile phone number"
-    ) String phoneNumber) {
+    public void setPhoneNumber(
+            @NotNull(message = "Phone number cannot be empty") @Pattern(regexp = "^(\\+46|0)(7[02369])[\\s\\-]?\\d{3}[\\s\\-]?\\d{2}[\\s\\-]?\\d{2}$", message = "Invalid Swedish mobile phone number") String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

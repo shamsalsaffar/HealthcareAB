@@ -14,9 +14,8 @@ public class AuthService {
     private final PatientRepository patientRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder,
-                       PatientRepository patientRepository) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+            PatientRepository patientRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.patientRepository = patientRepository;
@@ -39,7 +38,7 @@ public class AuthService {
 
     public Patient registerPatient(Patient patient) {
         patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-        return patientRepository.save(patient); //  Patient extends User
+        return patientRepository.save(patient); // Patient extends User
     }
 
     // check if username already exists
