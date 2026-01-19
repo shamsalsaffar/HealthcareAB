@@ -28,11 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(
-        controllers = AuthController.class,
-        excludeAutoConfiguration = {SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class},
-        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
-)
+@WebMvcTest(controllers = AuthController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class,
+        SecurityFilterAutoConfiguration.class }, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class))
 @Disabled("WebMvcTest disabled until Security/JWT test setup is ready")
 class AuthControllerTest {
 
@@ -58,15 +55,8 @@ class AuthControllerTest {
     @Test
     void register_shouldReturn201_whenValidRequest() throws Exception {
         // Arrange
-        PatientRegisterRequest req = new PatientRegisterRequest(
-                "test@test.com",
-                "Password@123!",
-                "John",
-                "Doe",
-                "Gothenburg, Sweden",
-                "0701234567",
-                "199001011234"
-        );
+        PatientRegisterRequest req = new PatientRegisterRequest("test@test.com", "Password@123!", "John", "Doe",
+                "Gothenburg, Sweden", "0701234567", "199001011234");
 
         when(patientRepository.existsByUsername(req.getUsername())).thenReturn(false);
         when(patientRepository.existsByPersonalIdentityNumber(req.getPersonalIdentityNumber())).thenReturn(false);
@@ -78,35 +68,23 @@ class AuthControllerTest {
         when(authService.registerPatient(any(Patient.class))).thenReturn(saved);
 
         // Act + Assert
-        mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(req)))
-                .andExpect(status().isCreated())
+        mockMvc.perform(post("/auth/register").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req))).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("Patient registered successfully"))
-                .andExpect(jsonPath("$.username").value("test@test.com"))
-                .andExpect(jsonPath("$.role").value("USER"));
+                .andExpect(jsonPath("$.username").value("test@test.com")).andExpect(jsonPath("$.role").value("USER"));
     }
 
     @Test
     void register_shouldReturn409_whenEmailExists() throws Exception {
         // Arrange
-        PatientRegisterRequest req = new PatientRegisterRequest(
-                "existing@test.com",
-                "Password@123!",
-                "John",
-                "Doe",
-                "Gothenburg, Sweden",
-                "0701234567",
-                "199001011234"
-        );
+        PatientRegisterRequest req = new PatientRegisterRequest("existing@test.com", "Password@123!", "John", "Doe",
+                "Gothenburg, Sweden", "0701234567", "199001011234");
 
         when(patientRepository.existsByUsername(req.getUsername())).thenReturn(true);
 
         // Act + Assert
-        mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(req)))
-                .andExpect(status().isConflict())
+        mockMvc.perform(post("/auth/register").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req))).andExpect(status().isConflict())
                 .andExpect(content().string("Email already exists."));
     }
 }

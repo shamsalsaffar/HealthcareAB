@@ -21,7 +21,6 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-
 @ExtendWith(MockitoExtension.class)
 class BookingServiceTest {
 
@@ -66,7 +65,7 @@ class BookingServiceTest {
 
     @Test
     void validateBooking_shouldFailWhenInputFieldsIsMissing() {
-        //Running test with all fields that can be manually added missing
+        // Running test with all fields that can be manually added missing
         Booking booking = validBooking();
 
         booking.setPatient(null);
@@ -77,13 +76,8 @@ class BookingServiceTest {
 
         List<String> errors = bookingService.validateBooking(booking);
 
-        List<String> expected = Arrays.asList(
-                "Field patient is missing",
-                "Field caregiver is missing",
-                "Field bookingStartTime is missing",
-                "Field bookingEndTime is missing",
-                "Field status is missing"
-        );
+        List<String> expected = Arrays.asList("Field patient is missing", "Field caregiver is missing",
+                "Field bookingStartTime is missing", "Field bookingEndTime is missing", "Field status is missing");
 
         Collections.sort(errors);
         Collections.sort(expected);
@@ -91,7 +85,7 @@ class BookingServiceTest {
         assertIterableEquals(expected, errors);
     }
 
-    //Help function to easy get a valid booking
+    // Help function to easy get a valid booking
     private Booking validBooking() {
         Booking booking = new Booking();
         booking.setPatient(patient);
@@ -101,6 +95,5 @@ class BookingServiceTest {
         booking.setStatus(BookingStatus.ACTIVE);
         return booking;
     }
-
 
 }

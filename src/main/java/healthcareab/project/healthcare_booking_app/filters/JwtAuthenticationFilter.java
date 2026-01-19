@@ -34,35 +34,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /**
-     Kör inte JWT-filter på /auth/** endpoints (login/register/logout/check).
+     * Kör inte JWT-filter på /auth/** endpoints (login/register/logout/check).
      */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path != null && (
-                path.equals("/auth/login") ||
-                        path.equals("/auth/register") ||
-                        path.equals("/auth/logout")
-        );
+        return path != null
+                && (path.equals("/auth/login") || path.equals("/auth/register") || path.equals("/auth/logout"));
     }
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         // Hämta token från header (Bearer) eller cookie (jwt).
         String jwt = resolveToken(request);
 
-        //Ingen token -> fortsätt som anonymous.
+        // Ingen token -> fortsätt som anonymous.
         if (!StringUtils.hasText(jwt)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        //Om user redan är autentiserad -> fortsätt.
+        // Om user redan är autentiserad -> fortsätt.
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
             filterChain.doFilter(request, response);
             return;
@@ -85,12 +79,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtUtil.validateToken(jwt, userDetails)) {
 
                 // Skapa Authentication och sätt i SecurityContext.
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);

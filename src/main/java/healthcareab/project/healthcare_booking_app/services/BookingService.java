@@ -31,13 +31,14 @@ public class BookingService {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-        return new BookingResponse(booking.getId(), booking.getPatient().getFirstName(), booking.getCaregiver().getFirstName(), booking.getBookingStartTime(), booking.getBookingEndTime(), booking.getCreatedAt());
+        return new BookingResponse(booking.getId(), booking.getPatient().getFirstName(),
+                booking.getCaregiver().getFirstName(), booking.getBookingStartTime(), booking.getBookingEndTime(),
+                booking.getCreatedAt());
     }
 
     public ResponseEntity deleteBookingById(long id) {
-        //validate that the booking exists before trying to delete it
-        bookingRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+        // validate that the booking exists before trying to delete it
+        bookingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
         bookingRepository.deleteById(id);
 

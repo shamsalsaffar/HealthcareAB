@@ -11,7 +11,8 @@ public class BookingResponse {
     private LocalDateTime bookingEndTime;
     private LocalDateTime createdAt;
 
-    public BookingResponse(long id, String patientFirstName, String caregiverFirstName, LocalDateTime bookingStartTime, LocalDateTime bookingEndTime, LocalDateTime createdAt) {
+    public BookingResponse(long id, String patientFirstName, String caregiverFirstName, LocalDateTime bookingStartTime,
+            LocalDateTime bookingEndTime, LocalDateTime createdAt) {
         this.id = id;
         this.patientFirstName = patientFirstName;
         this.caregiverFirstName = caregiverFirstName;
