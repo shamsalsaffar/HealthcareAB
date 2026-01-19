@@ -2,8 +2,13 @@ package healthcareab.project.healthcare_booking_app.services;
 
 import healthcareab.project.healthcare_booking_app.dto.FeedbackRequest;
 import healthcareab.project.healthcare_booking_app.dto.FeedbackResponse;
+import healthcareab.project.healthcare_booking_app.exceptions.ResourceNotFoundException;
+import healthcareab.project.healthcare_booking_app.models.Booking;
+import healthcareab.project.healthcare_booking_app.models.Caregiver;
 import healthcareab.project.healthcare_booking_app.models.Feedback;
+import healthcareab.project.healthcare_booking_app.models.Patient;
 import healthcareab.project.healthcare_booking_app.repository.BookingRepository;
+import healthcareab.project.healthcare_booking_app.repository.CaregiverRepository;
 import healthcareab.project.healthcare_booking_app.repository.FeedbackRepository;
 import healthcareab.project.healthcare_booking_app.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -14,15 +19,38 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
+    private final CaregiverRepository caregiverRepository;
 
-    public FeedbackService(FeedbackRepository feedbackRepository, UserRepository userRepository, BookingRepository bookingRepository) {
+    public FeedbackService(FeedbackRepository feedbackRepository, UserRepository userRepository, BookingRepository bookingRepository, CaregiverRepository caregiverRepository) {
         this.feedbackRepository = feedbackRepository;
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
+        this.caregiverRepository = caregiverRepository;
     }
 
     public FeedbackResponse createFeedback(FeedbackRequest dtoRequest) {
+        Patient patient = userRepository.findById(dtoRequest.getPatient())
+                .filter(Patient.class::isInstance)
+                .map(Patient.class::cast)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
 
+        Booking booking = bookingRepository.findById(dtoRequest.getBooking())
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+        Caregiver clinic = caregiverRepository.findById(dtoRequest.getClinic())
+                .orElseThrow(() -> new ResourceNotFoundException("Clinic not found"));
+
+        Feedback feedback = new Feedback();
+        feedback.setPatient(patient);
+        feedback.setClinic(clinic.getClinic());
+        feedback.setBooking(booking);
+        feedback.setRating(dtoRequest.getRating());
+        feedback.setComment(dtoRequest.getComment());
+        feedback.setAnonymous(dtoRequest.getAnonymous());
+
+        feedbackRepository.save(feedback);
+
+        return mapToFeedbackResponse(feedback);
     }
 
     private FeedbackResponse mapToFeedbackResponse(Feedback feedback) {

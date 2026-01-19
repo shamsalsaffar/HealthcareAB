@@ -10,6 +10,9 @@ public class FeedbackRequest {
     @NotNull
     private Long booking;
 
+    @NotNull
+    private Long clinic;
+
     private Integer rating;
 
     private String comment;
@@ -30,6 +33,14 @@ public class FeedbackRequest {
 
     public void setBooking(@NotNull Long booking) {
         this.booking = booking;
+    }
+
+    public @NotNull Long getClinic() {
+        return clinic;
+    }
+
+    public void setClinic(@NotNull Long clinic) {
+        this.clinic = clinic;
     }
 
     public Integer getRating() {
