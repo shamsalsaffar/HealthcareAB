@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -24,6 +26,13 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/anonymize")
+    public ResponseEntity<Map<String, String>> anonymizeUser(@PathVariable Long id) {
+        System.out.println("✅ HIT anonymize controller for id=" + id);
+        userService.anonymizeUserById(id);
+        return ResponseEntity.ok(Map.of("message", "User anonymized successfully"));
     }
 
     @PatchMapping("/{id}")
