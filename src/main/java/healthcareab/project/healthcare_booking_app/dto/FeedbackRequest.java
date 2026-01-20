@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotNull;
 public class FeedbackRequest {
 
     @NotNull
-    private Long patient;
+    private Long patientId;
 
     @NotNull
-    private Long booking;
+    private Long bookingId;
 
     private Integer rating;
 
@@ -16,20 +16,20 @@ public class FeedbackRequest {
 
     private Boolean anonymous;
 
-    public @NotNull Long getPatient() {
-        return patient;
+    public @NotNull Long getPatientId() {
+        return patientId;
     }
 
-    public void setPatient(@NotNull Long patient) {
-        this.patient = patient;
+    public void setPatientId(@NotNull Long patientId) {
+        this.patientId = patientId;
     }
 
-    public @NotNull Long getBooking() {
-        return booking;
+    public @NotNull Long getBookingId() {
+        return bookingId;
     }
 
-    public void setBooking(@NotNull Long booking) {
-        this.booking = booking;
+    public void setBookingId(@NotNull Long bookingId) {
+        this.bookingId = bookingId;
     }
 
     public Integer getRating() {

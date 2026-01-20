@@ -10,7 +10,7 @@ public class FeedbackResponse {
 
     private Long bookingId;
 
-    private Long clinicID;
+    private Long clinicId;
 
     private Integer rating;
 
@@ -20,11 +20,11 @@ public class FeedbackResponse {
 
     private LocalDate createdAt;
 
-    public FeedbackResponse(Long id, Long patientId, Long bookingId, Long clinicID, Integer rating, String comment, Boolean anonymous, LocalDate createdAt) {
+    public FeedbackResponse(Long id, Long patientId, Long bookingId, Long clinicId, Integer rating, String comment, Boolean anonymous, LocalDate createdAt) {
         this.id = id;
         this.patientId = patientId;
         this.bookingId = bookingId;
-        this.clinicID = clinicID;
+        this.clinicId = clinicId;
         this.rating = rating;
         this.comment = comment;
         this.anonymous = anonymous;
@@ -35,12 +35,12 @@ public class FeedbackResponse {
         return id;
     }
 
-    public Long getClinicID() {
-        return clinicID;
+    public Long getClinicId() {
+        return clinicId;
     }
 
-    public void setClinicID(Long clinicID) {
-        this.clinicID = clinicID;
+    public void setClinicId(Long clinicId) {
+        this.clinicId = clinicId;
     }
 
     public Long getBookingId() {
