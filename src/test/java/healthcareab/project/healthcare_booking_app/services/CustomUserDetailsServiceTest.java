@@ -46,7 +46,7 @@ class CustomUserDetailsServiceTest {
         assertEquals("ENC_PASS", details.getPassword()); // password matchar
 
         // Kontrollera authority: ska bli "USER"
-        assertTrue(details.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("USER")));
+        assertTrue(details.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
     }
 
     @Test
