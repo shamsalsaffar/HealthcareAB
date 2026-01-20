@@ -22,7 +22,8 @@ public class FeedbackService {
     private final BookingRepository bookingRepository;
     private final PatientRepository patientRepository;
 
-    public FeedbackService(FeedbackRepository feedbackRepository, UserRepository userRepository, BookingRepository bookingRepository, PatientRepository patientRepository) {
+    public FeedbackService(FeedbackRepository feedbackRepository, UserRepository userRepository,
+            BookingRepository bookingRepository, PatientRepository patientRepository) {
         this.feedbackRepository = feedbackRepository;
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
@@ -54,7 +55,8 @@ public class FeedbackService {
     }
 
     private FeedbackResponse mapToFeedbackResponse(Feedback feedback) {
-        return new FeedbackResponse(feedback.getId(), feedback.getPatient().getId(), feedback.getBooking().getId(), feedback.getClinic().getId(),
-                feedback.getRating(), feedback.getComment(), feedback.getAnonymous(), feedback.getCreatedAt());
+        return new FeedbackResponse(feedback.getId(), feedback.getPatient().getId(), feedback.getBooking().getId(),
+                feedback.getClinic().getId(), feedback.getRating(), feedback.getComment(), feedback.getAnonymous(),
+                feedback.getCreatedAt());
     }
 }

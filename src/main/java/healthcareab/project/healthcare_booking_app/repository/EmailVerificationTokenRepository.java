@@ -1,6 +1,6 @@
 package healthcareab.project.healthcare_booking_app.repository;
 
-import healthcareab.project.healthcare_booking_app.models.enums.EmailVerificationToken;
+import healthcareab.project.healthcare_booking_app.models.EmailVerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

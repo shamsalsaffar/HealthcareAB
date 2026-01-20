@@ -51,13 +51,15 @@ public class SecurityConfig {
 
                 // define URL based rules
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/availabilities/**").permitAll()
                         .requestMatchers("/api/booking").permitAll()
                         .requestMatchers("/api/feedbacks").permitAll()
                         .requestMatchers("/caregiver/find-by-user-id").permitAll()
                         .requestMatchers("/users/**").permitAll()
+
+                        .requestMatchers("/patient/find-by-user-id").hasAnyRole("ADMIN", "CAREGIVER")
+
                         .anyRequest().authenticated()
                 )
 
@@ -90,10 +92,18 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList(
-                "Authorization", "Content-Type", "Accept", "Origin", "Cookie", "Set-Cookie"
-        ));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "Origin", // Utan
+                // Origin kan
+                // CORS
+                // ibland bli
+                // konstigt
+                // vid
+                // preflight
+                "Cookie"));
+
+        // headers frontend can READ from the response
         configuration.setExposedHeaders(List.of("Set-Cookie"));
+
         configuration.setAllowCredentials(true);
 
         // cache preflight response (optional)

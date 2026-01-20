@@ -38,7 +38,7 @@ public class FeedbackServiceTest {
     @InjectMocks
     private FeedbackService feedbackService;
 
-    //TODO Happy cases
+    // TODO Happy cases
     @Test
     void whenCreateFeedback_shouldReturnSuccess() {
         // Arrange
@@ -77,36 +77,31 @@ public class FeedbackServiceTest {
         assertThat(response.getAnonymous()).isFalse();
     }
 
-    //TODO Unhappy cases
+    // TODO Unhappy cases
     @Test
-    void whenPatientNotFound_shouldThrowException () {
+    void whenPatientNotFound_shouldThrowException() {
         // Arrange
         FeedbackRequest request = new FeedbackRequest();
         request.setPatientId(6L);
 
-        when(patientRepository.findById(6L))
-                .thenReturn(Optional.empty());
+        when(patientRepository.findById(6L)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(ResourceNotFoundException.class,
-                () -> feedbackService.createFeedback(request));
+        assertThrows(ResourceNotFoundException.class, () -> feedbackService.createFeedback(request));
     }
 
     @Test
-    void whenBookingNotFound_shouldThrowException () {
+    void whenBookingNotFound_shouldThrowException() {
         // Arrange
         FeedbackRequest request = new FeedbackRequest();
         request.setPatientId(6L);
         request.setBookingId(1L);
 
-        when(patientRepository.findById(6L))
-                .thenReturn(Optional.of(new Patient()));
+        when(patientRepository.findById(6L)).thenReturn(Optional.of(new Patient()));
 
-        when(bookingRepository.findById(1L))
-                .thenReturn(Optional.empty());
+        when(bookingRepository.findById(1L)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(ResourceNotFoundException.class,
-                () -> feedbackService.createFeedback(request));
+        assertThrows(ResourceNotFoundException.class, () -> feedbackService.createFeedback(request));
     }
 }

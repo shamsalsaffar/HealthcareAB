@@ -2,10 +2,9 @@ package healthcareab.project.healthcare_booking_app.services;
 
 import healthcareab.project.healthcare_booking_app.dto.UpdateUserRequest;
 import healthcareab.project.healthcare_booking_app.models.Caregiver;
-import healthcareab.project.healthcare_booking_app.models.Patient;
+import healthcareab.project.healthcare_booking_app.models.EmailVerificationToken;
 import healthcareab.project.healthcare_booking_app.models.Patient;
 import healthcareab.project.healthcare_booking_app.models.User;
-import healthcareab.project.healthcare_booking_app.models.enums.EmailVerificationToken;
 import healthcareab.project.healthcare_booking_app.models.enums.Specialisation;
 import healthcareab.project.healthcare_booking_app.repository.CaregiverRepository;
 import healthcareab.project.healthcare_booking_app.repository.EmailVerificationTokenRepository;
@@ -224,10 +223,7 @@ class UserServiceTest {
 
         UpdateUserRequest dto = new UpdateUserRequest();
 
-        ResponseStatusException ex = assertThrows(
-                ResponseStatusException.class,
-                () -> userService.updateUser(1L, dto)
-        );
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> userService.updateUser(1L, dto));
 
         assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
     }
