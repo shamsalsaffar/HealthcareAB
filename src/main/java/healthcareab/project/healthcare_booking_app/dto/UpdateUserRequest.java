@@ -28,13 +28,7 @@ public class UpdateUserRequest {
     // caregiver fields
     private Specialisation specialisation;
 
-    public UpdateUserRequest(String firstName, String lastName, String address, String phoneNumber, String personalIdentityNumber, Specialisation specialisation) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.personalIdentityNumber = personalIdentityNumber;
-        this.specialisation = specialisation;
+    public UpdateUserRequest() {
     }
 
     public String getFirstName() {
