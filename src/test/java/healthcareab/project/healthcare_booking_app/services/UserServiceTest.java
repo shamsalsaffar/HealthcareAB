@@ -178,7 +178,6 @@ class UserServiceTest {
         verify(caregiverRepository, never()).save(any());
     }
 
-
     @Test
     void updateUser_shouldUpdatePatientFields() {
         Patient patient = new Patient();
