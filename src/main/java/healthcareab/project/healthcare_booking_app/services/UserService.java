@@ -4,7 +4,6 @@ import healthcareab.project.healthcare_booking_app.models.User;
 import healthcareab.project.healthcare_booking_app.dto.UpdateUserRequest;
 import healthcareab.project.healthcare_booking_app.models.Caregiver;
 import healthcareab.project.healthcare_booking_app.models.Patient;
-import healthcareab.project.healthcare_booking_app.models.User;
 import healthcareab.project.healthcare_booking_app.repository.CaregiverRepository;
 import healthcareab.project.healthcare_booking_app.repository.EmailVerificationTokenRepository;
 import healthcareab.project.healthcare_booking_app.repository.PatientRepository;
@@ -89,11 +88,12 @@ public class UserService {
 
             userRepository.save(user);
 
-            log.info("Anonymize completed for userId={}", userId);
+        } catch (ResponseStatusException ex) {
+            throw ex;
 
         } catch (Exception ex) {
             log.error("Anonymize FAILED for userId={}", userId, ex);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to anonymize user", ex);
         }
     }
 

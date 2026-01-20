@@ -3,6 +3,8 @@ package healthcareab.project.healthcare_booking_app.services;
 import healthcareab.project.healthcare_booking_app.dto.UpdateUserRequest;
 import healthcareab.project.healthcare_booking_app.models.Caregiver;
 import healthcareab.project.healthcare_booking_app.models.Patient;
+import healthcareab.project.healthcare_booking_app.models.Patient;
+import healthcareab.project.healthcare_booking_app.models.User;
 import healthcareab.project.healthcare_booking_app.models.enums.EmailVerificationToken;
 import healthcareab.project.healthcare_booking_app.models.enums.Specialisation;
 import healthcareab.project.healthcare_booking_app.repository.CaregiverRepository;
@@ -21,8 +23,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -85,6 +89,95 @@ class UserServiceTest {
         assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
         assertEquals("User not found", ex.getReason());
     }
+
+    @Test
+    void anonymizeUserById_shouldThrowNotFound_whenUserDoesNotExist() {
+        Long userId = 999L;
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> userService.anonymizeUserById(userId));
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("User not found", ex.getReason());
+
+        verify(userRepository).findById(userId);
+        verifyNoMoreInteractions(patientRepository, caregiverRepository, emailVerificationTokenRepository);
+    }
+
+    @Test
+    void anonymizeUserById_shouldDoNothing_whenAlreadyDeleted() {
+        Long userId = 1L;
+
+        User user = new User();
+        user.setId(userId);
+        user.setDeleted(true);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        userService.anonymizeUserById(userId);
+
+        verify(userRepository).findById(userId);
+        verify(userRepository, never()).save(any());
+        verify(patientRepository, never()).save(any());
+        verify(emailVerificationTokenRepository, never()).delete(any());
+    }
+
+    @Test
+    void anonymizeUserById_shouldAnonymizeUserAndPatient_whenPatientExists() {
+        Long userId = 1L;
+
+        // Arrange: user (parent table)
+        User user = new User();
+        user.setId(userId);
+        user.setUsername("shamsalsaffar@gmail.com");
+        user.setFirstName("TEST");
+        user.setLastName("alsaffar");
+        user.setEnabled(true);
+        user.setDeleted(false);
+
+        // Arrange: patient (child table)
+        Patient patient = new Patient();
+        patient.setId(userId); // same id because JOINED inheritance
+        patient.setAddress("Gothenburg, Sweden");
+        patient.setPhoneNumber("0701234567");
+        patient.setPersonalIdentityNumber("199001011359");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        EmailVerificationToken token = new EmailVerificationToken();
+        when(emailVerificationTokenRepository.findByUserId(userId)).thenReturn(Optional.of(token));
+
+        when(patientRepository.findById(userId)).thenReturn(Optional.of(patient));
+        when(caregiverRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // Act
+        userService.anonymizeUserById(userId);
+
+        // Assert user changes
+        assertEquals("anon+" + userId + "@example.invalid", user.getUsername());
+        assertEquals("Anonymized", user.getFirstName());
+        assertEquals("Anonymized", user.getLastName());
+        assertEquals(false, user.isEnabled());
+        assertEquals(true, user.isDeleted());
+
+        // Assert patient changes
+        assertEquals("Anonymized", patient.getAddress());
+        assertEquals("0700000000", patient.getPhoneNumber());
+        assertEquals("19000101" + String.format("%04d", userId % 10000), patient.getPersonalIdentityNumber());
+
+        // Verify repository calls
+        verify(emailVerificationTokenRepository).findByUserId(userId);
+        verify(emailVerificationTokenRepository).delete(token);
+
+        verify(patientRepository).save(patient);
+        verify(userRepository).save(user);
+
+        // caregiver not saved
+        verify(caregiverRepository, never()).save(any());
+    }
+
 
     @Test
     void updateUser_shouldUpdatePatientFields() {
