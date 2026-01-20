@@ -56,11 +56,11 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        //update users shared fields
+        // update users shared fields
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
 
-        //update patient specific fields
+        // update patient specific fields
         if (user instanceof Patient patient) {
             if (dto.getPhoneNumber() != null) {
                 patient.setPhoneNumber(dto.getPhoneNumber());
@@ -72,7 +72,7 @@ public class UserService {
                 patient.setPersonalIdentityNumber(dto.getPersonalIdentityNumber());
             }
         }
-        //update caregiver specific fields
+        // update caregiver specific fields
         else if (user instanceof Caregiver caregiver) {
             if (dto.getSpecialisation() != null) {
                 caregiver.setSpecialisation(dto.getSpecialisation());

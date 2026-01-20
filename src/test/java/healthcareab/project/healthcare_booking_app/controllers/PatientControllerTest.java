@@ -24,17 +24,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = PatientController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class,
         SecurityFilterAutoConfiguration.class }, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-        SecurityConfig.class, JwtAuthenticationFilter.class }))
+                SecurityConfig.class, JwtAuthenticationFilter.class }))
 public class PatientControllerTest {
 
-        @Autowired
-        private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-        @Autowired
-        private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-        @MockitoBean
-        PatientService patientService;
+    @MockitoBean
+    PatientService patientService;
 
     @Test
     void findPatientByUserId_shouldReturnOk_whenValidRequest() throws Exception {
@@ -49,25 +49,18 @@ public class PatientControllerTest {
 
         when(patientService.findPatientByUserId(userId)).thenReturn(response);
 
-        mockMvc.perform(get("/patient/find-by-user-id")
-                        .param("userId", userId.toString())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.userId").value(1L))
-                .andExpect(jsonPath("$.firstName").value("Test"))
-                .andExpect(jsonPath("$.lastName").value("Patient"))
+        mockMvc.perform(get("/patient/find-by-user-id").param("userId", userId.toString())
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$.userId").value(1L))
+                .andExpect(jsonPath("$.firstName").value("Test")).andExpect(jsonPath("$.lastName").value("Patient"))
                 .andExpect(jsonPath("$.address").value("Sesame Street 24, Gothenburg"))
                 .andExpect(jsonPath("$.personalIdentityNumber").value("199012011300"))
                 .andExpect(jsonPath("$.phoneNumber").value("0788484848"));
     }
 
-
     @Test
     void findPatientByUserId_shouldReturnBadRequest_whenUserIdIsEmpty() throws Exception {
-        mockMvc.perform(get("/patient/find-by-user-id")
-                        .param("userId", "")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/patient/find-by-user-id").param("userId", "").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("userId is required and must be provided"));
     }

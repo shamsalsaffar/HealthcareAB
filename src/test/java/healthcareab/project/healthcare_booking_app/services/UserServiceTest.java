@@ -132,10 +132,7 @@ class UserServiceTest {
 
         UpdateUserRequest dto = new UpdateUserRequest();
 
-        ResponseStatusException ex = assertThrows(
-                ResponseStatusException.class,
-                () -> userService.updateUser(1L, dto)
-        );
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> userService.updateUser(1L, dto));
 
         assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
     }

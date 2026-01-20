@@ -20,7 +20,8 @@ public class FeedbackResponse {
 
     private LocalDate createdAt;
 
-    public FeedbackResponse(Long id, Long patientId, Long bookingId, Long clinicId, Integer rating, String comment, Boolean anonymous, LocalDate createdAt) {
+    public FeedbackResponse(Long id, Long patientId, Long bookingId, Long clinicId, Integer rating, String comment,
+            Boolean anonymous, LocalDate createdAt) {
         this.id = id;
         this.patientId = patientId;
         this.bookingId = bookingId;
