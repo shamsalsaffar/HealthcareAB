@@ -2,11 +2,10 @@ package healthcareab.project.healthcare_booking_app.services;
 
 import healthcareab.project.healthcare_booking_app.dto.FeedbackRequest;
 import healthcareab.project.healthcare_booking_app.dto.FeedbackResponse;
-import healthcareab.project.healthcare_booking_app.models.Availability;
+import healthcareab.project.healthcare_booking_app.exceptions.ResourceNotFoundException;
 import healthcareab.project.healthcare_booking_app.models.Booking;
 import healthcareab.project.healthcare_booking_app.models.Caregiver;
 import healthcareab.project.healthcare_booking_app.models.Clinic;
-import healthcareab.project.healthcare_booking_app.models.Feedback;
 import healthcareab.project.healthcare_booking_app.models.Patient;
 import healthcareab.project.healthcare_booking_app.repository.BookingRepository;
 import healthcareab.project.healthcare_booking_app.repository.FeedbackRepository;
@@ -20,7 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,8 +52,7 @@ public class FeedbackServiceTest {
         Patient patient = new Patient();
         patient.setId(6L);
 
-        Clinic clinic = new Clinic();
-        clinic.setId(3L);
+        Clinic clinic = mock(Clinic.class);
 
         Caregiver caregiver = new Caregiver();
         caregiver.setClinic(clinic);
@@ -62,16 +61,9 @@ public class FeedbackServiceTest {
         booking.setId(1L);
         booking.setCaregiver(caregiver);
 
-//        Caregiver caregiver = booking.getCaregiver();
-//        Clinic clinic = caregiver.getClinic();
-
+        when(clinic.getId()).thenReturn(3L);
         when(patientRepository.findById(6L)).thenReturn(Optional.of(patient));
         when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
-
-//        when(feedbackRepository.save(any()))
-//                .thenAnswer(invocation -> invocation.getArgument(0));
-
-//        when(feedbackRepository.save(any(Feedback.class))).thenReturn((Feedback) feedbackRepository);
 
         // Act
         FeedbackResponse response = feedbackService.createFeedback(request);
@@ -89,18 +81,32 @@ public class FeedbackServiceTest {
     @Test
     void whenPatientNotFound_shouldThrowException () {
         // Arrange
+        FeedbackRequest request = new FeedbackRequest();
+        request.setPatientId(6L);
 
-        // Act
+        when(patientRepository.findById(6L))
+                .thenReturn(Optional.empty());
 
-        // Assert
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class,
+                () -> feedbackService.createFeedback(request));
     }
 
     @Test
     void whenBookingNotFound_shouldThrowException () {
         // Arrange
+        FeedbackRequest request = new FeedbackRequest();
+        request.setPatientId(6L);
+        request.setBookingId(1L);
 
-        // Act
+        when(patientRepository.findById(6L))
+                .thenReturn(Optional.of(new Patient()));
 
-        // Assert
+        when(bookingRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class,
+                () -> feedbackService.createFeedback(request));
     }
 }
