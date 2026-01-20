@@ -49,8 +49,8 @@ public class AvailabilityServiceTest {
         Availability save = new Availability();
         save.setCaregiver(caregiver);
 
-        mockCaregiverFound();
-
+        when(caregiver.getId()).thenReturn(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(caregiver));
         when(availabilityRepository.save(any(Availability.class))).thenReturn(save);
 
         // Act
@@ -191,11 +191,6 @@ public class AvailabilityServiceTest {
         entity.setEndTime(LocalDate.now());
         entity.setReoccurring(false);
         return entity;
-    }
-
-    private void mockCaregiverFound() {
-        when(caregiver.getId()).thenReturn(1L);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(caregiver));
     }
 
 }

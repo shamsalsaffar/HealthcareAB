@@ -54,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/availabilities/**").permitAll()
                         .requestMatchers("/api/booking").permitAll()
+                        .requestMatchers("/api/feedbacks").permitAll()
                         .requestMatchers("/caregiver/find-by-user-id").permitAll()
                         .anyRequest().authenticated()
                 )
