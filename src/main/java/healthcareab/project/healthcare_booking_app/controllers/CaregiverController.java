@@ -23,7 +23,6 @@ public class CaregiverController {
     public ResponseEntity<CaregiverResponse> findCaregiverByUserId(
             @RequestParam @NotNull(message = "UserId is required") Long userId) {
         CaregiverResponse caregiverResponse = caregiverService.findCaregiverByUserId(userId);
-
         return ResponseEntity.ok(caregiverResponse);
     }
 

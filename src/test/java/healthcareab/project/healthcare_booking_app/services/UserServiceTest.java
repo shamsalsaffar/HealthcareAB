@@ -1,6 +1,6 @@
 package healthcareab.project.healthcare_booking_app.services;
 
-import healthcareab.project.healthcare_booking_app.models.enums.EmailVerificationToken;
+import healthcareab.project.healthcare_booking_app.models.EmailVerificationToken;
 import healthcareab.project.healthcare_booking_app.repository.CaregiverRepository;
 import healthcareab.project.healthcare_booking_app.repository.EmailVerificationTokenRepository;
 import healthcareab.project.healthcare_booking_app.repository.PatientRepository;

@@ -28,7 +28,7 @@ public class CaregiverService {
     }
 
     // helper methods
-    public CaregiverResponse mapToCaregiverResponse(Caregiver caregiver) {
+    private CaregiverResponse mapToCaregiverResponse(Caregiver caregiver) {
         CaregiverResponse caregiverResponse = new CaregiverResponse();
         caregiverResponse.setUserId(caregiver.getId());
         caregiverResponse.setFirstName(caregiver.getFirstName());

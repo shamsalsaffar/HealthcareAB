@@ -6,7 +6,7 @@ import healthcareab.project.healthcare_booking_app.dto.PatientRegisterRequest;
 import healthcareab.project.healthcare_booking_app.dto.RegisterResponse;
 import healthcareab.project.healthcare_booking_app.models.Patient;
 import healthcareab.project.healthcare_booking_app.models.User;
-import healthcareab.project.healthcare_booking_app.models.enums.EmailVerificationToken;
+import healthcareab.project.healthcare_booking_app.models.EmailVerificationToken;
 import healthcareab.project.healthcare_booking_app.models.enums.Role;
 import healthcareab.project.healthcare_booking_app.repository.EmailVerificationTokenRepository;
 import healthcareab.project.healthcare_booking_app.repository.PatientRepository;

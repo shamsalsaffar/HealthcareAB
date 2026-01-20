@@ -50,30 +50,28 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 // define URL based rules
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/api/availabilities/**").permitAll()
-                        .requestMatchers("/api/booking").permitAll()
-                        .requestMatchers("/caregiver/find-by-user-id").permitAll()
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/availabilities/**").permitAll().requestMatchers("/api/booking")
+                        .permitAll().requestMatchers("/caregiver/find-by-user-id").permitAll()
+                        .requestMatchers("/patient/find-by-user-id").permitAll()
+
+                        .requestMatchers("/patient/find-by-user-id").hasAnyRole("ADMIN", "CAREGIVER")
+
+                        .anyRequest().authenticated())
 
                 // disable session due to jwt statelessness
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 // exception handling for 401 , 403
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"status\":401,\"message\":\"Unauthorized\"}");
-                        })
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"status\":403,\"message\":\"Forbidden\"}");
-                        })
-                )
+                .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"status\":401,\"message\":\"Unauthorized\"}");
+                }).accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"status\":403,\"message\":\"Forbidden\"}");
+                }))
 
                 // add jwt filter before standard filter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
