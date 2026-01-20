@@ -1,6 +1,5 @@
-package healthcareab.project.healthcare_booking_app.models.enums;
+package healthcareab.project.healthcare_booking_app.models;
 
-import healthcareab.project.healthcare_booking_app.models.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
