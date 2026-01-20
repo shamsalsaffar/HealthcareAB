@@ -64,6 +64,11 @@ public class User {
 
     private LocalDateTime emailVerifiedAt;
 
+    @Column(nullable = false)
+    private boolean deleted;
+
+    private LocalDateTime deletedAt;
+
     public User() {
     }
 
@@ -91,13 +96,13 @@ public class User {
         this.username = username;
     }
 
-    public @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})"
+   public @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})"
             + ".*$", message = "Password must be at least 8 characters long and contain at least "
                     + "one uppercase letter, one number, and one special character") String getPassword() {
         return password;
     }
 
-    public void setPassword(@Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})"
+   public void setPassword(@Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})"
             + ".*$", message = "Password must be at least 8 characters long and contain at least "
                     + "one uppercase letter, one number, and one special character") String password) {
         this.password = password;
@@ -122,6 +127,22 @@ public class User {
     public void setLastName(
             @Pattern(regexp = "^[A-Za-z]+(?:[ '-][A-Za-z]+)*$", message = "First name can only include alphabetic characters, spaces, hyphens, and apostrophes. Example: 'John Doe' or 'Mary-Anne O'Conner'.") @Size(max = 50, message = "Your email cannot be longer than 50 characters.") String lastName) {
         this.lastName = lastName;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public Role getRole() {
