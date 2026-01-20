@@ -86,7 +86,7 @@ public class PatientServiceTest {
         verify(patientRepository, never()).findById(any());
     }
 
-    // ===================== NOT A CAREGIVER =====================
+    // ===================== NOT A PATIENT =====================
 
     @Test
     void findPatientByUserId_shouldThrowBadRequest_whenUserIsNotPatient() {
