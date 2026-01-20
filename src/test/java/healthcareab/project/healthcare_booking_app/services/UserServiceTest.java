@@ -1,6 +1,10 @@
 package healthcareab.project.healthcare_booking_app.services;
 
-import healthcareab.project.healthcare_booking_app.models.EmailVerificationToken;
+import healthcareab.project.healthcare_booking_app.dto.UpdateUserRequest;
+import healthcareab.project.healthcare_booking_app.models.Caregiver;
+import healthcareab.project.healthcare_booking_app.models.Patient;
+import healthcareab.project.healthcare_booking_app.models.enums.EmailVerificationToken;
+import healthcareab.project.healthcare_booking_app.models.enums.Specialisation;
 import healthcareab.project.healthcare_booking_app.repository.CaregiverRepository;
 import healthcareab.project.healthcare_booking_app.repository.EmailVerificationTokenRepository;
 import healthcareab.project.healthcare_booking_app.repository.PatientRepository;
@@ -80,5 +84,59 @@ class UserServiceTest {
 
         assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
         assertEquals("User not found", ex.getReason());
+    }
+
+    @Test
+    void updateUser_shouldUpdatePatientFields() {
+        Patient patient = new Patient();
+        patient.setFirstName("Old");
+        patient.setLastName("Name");
+        patient.setPhoneNumber("123");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(patient));
+
+        UpdateUserRequest dto = new UpdateUserRequest();
+        dto.setFirstName("New");
+        dto.setLastName("User");
+        dto.setPhoneNumber("999");
+        dto.setAddress("New Address");
+        dto.setPersonalIdentityNumber("PIN123");
+
+        userService.updateUser(1L, dto);
+
+        assertEquals("New", patient.getFirstName());
+        assertEquals("User", patient.getLastName());
+        assertEquals("999", patient.getPhoneNumber());
+        assertEquals("New Address", patient.getAddress());
+        assertEquals("PIN123", patient.getPersonalIdentityNumber());
+    }
+
+    @Test
+    void updateUser_shouldUpdateCaregiverFields() {
+        Caregiver caregiver = new Caregiver();
+        caregiver.setSpecialisation(Specialisation.CARDIOLOGY);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(caregiver));
+
+        UpdateUserRequest dto = new UpdateUserRequest();
+        dto.setSpecialisation(Specialisation.NEUROLOGY);
+
+        userService.updateUser(1L, dto);
+
+        assertEquals(Specialisation.NEUROLOGY, caregiver.getSpecialisation());
+    }
+
+    @Test
+    void updateUser_shouldThrowNotFound_whenUserDoesNotExist() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        UpdateUserRequest dto = new UpdateUserRequest();
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> userService.updateUser(1L, dto)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
     }
 }
