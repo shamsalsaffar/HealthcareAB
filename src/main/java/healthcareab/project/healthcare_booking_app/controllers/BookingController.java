@@ -26,22 +26,20 @@ public class BookingController {
     }
 
     @PostMapping("/booking")
-    public ResponseEntity createBooking(@RequestBody Booking booking) {
-
+    public ResponseEntity<?> createBooking(@RequestBody Booking booking) {
         List<String> errors = bookingService.validateBooking(booking);
+        if (!errors.isEmpty()) return ResponseEntity.badRequest().body(Map.of("errors", errors));
 
-        if (!errors.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("errors", errors));
-        }
+        Booking saved = bookingService.createBooking(booking);
 
-        bookingService.createBooking(booking);
-
-        return ResponseEntity.ok("Booking successful");
+        return ResponseEntity.ok(Map.of(
+                "message", "Booking successful",
+                "id", saved.getId()
+        ));
     }
 
     @GetMapping("/booking")
     public BookingResponse getBookingById(@RequestParam Long id) {
-
         return bookingService.findBookingById(id);
     }
 
@@ -50,5 +48,4 @@ public class BookingController {
 
         return bookingService.deleteBookingById(id);
     }
-
 }
