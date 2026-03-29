@@ -108,3 +108,28 @@ The frontend (React) is not included in this repository.
 ## Author
 
 Developed as part of a team project with focus on backend architecture, security, testing, and CI/CD.
+
+--- 
+## 👩‍💻 My Role & Contributions
+
+In this project, I had a strong focus on backend development, infrastructure, and quality assurance.
+
+My main contributions included:
+
+- Implemented Docker configuration for consistent local development environment  
+- Set up CI pipeline using GitHub Actions for automated build and validation  
+- Configured project quality tools (Checkstyle, Maven build flow)  
+
+- Developed and structured unit testing for service layer  
+- Used JUnit 5 and Mockito for testing business logic  
+- Improved code reliability through test coverage and validation  
+
+- Implemented email verification system using token-based activation  
+- Designed secure user registration flow with account activation  
+
+- Developed user management features:
+  - hard delete (permanent removal)  
+  - soft delete (anonymization for data integrity)  
+
+- Contributed to backend architecture design and security improvements  
+- Collaborated with team in an agile workflow (sprints, planning, code reviews)  
