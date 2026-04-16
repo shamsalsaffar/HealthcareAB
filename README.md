@@ -40,6 +40,22 @@ The backend focuses on:
 
 ---
 
+## 📄 API Documentation (Postman)
+
+You can explore and test all available API endpoints using the Postman documentation below:
+
+👉 Postman Documentation:
+https://documenter.getpostman.com/view/41126830/2sBXVkB991
+
+### What’s included:
+
+* All available endpoints with request/response examples  
+* Authentication flow (JWT)  
+* Headers and required parameters  
+* Example payloads for testing  
+
+---
+
 ## Architecture
 
 The backend follows a layered architecture:
